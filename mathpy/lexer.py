@@ -33,16 +33,22 @@ class MathPyLexer:
             self.current_char = self.code_text[self.current_index]
 
     def make_name(self) -> Token:
+        line_start = self.current_line
+        column_start = self.current_column
+
         name = self.current_char
         self.advance()
 
-        while self.current_char in token_types['TT_NAME'] + token_types['TT_NAME_EXTENSION']:
+        while self.current_char in token_types['TT_NAME'] + token_types['_TT_NAME_EXTENSION']:
             name += self.current_char
             self.advance()
 
-        return Token(name, 'TT_NAME')
+        return Token(name, 'TT_NAME', line_start, column_start)
 
     def make_string(self) -> Token:
+        line_start = self.current_line
+        column_start = self.current_column
+
         quote = self.current_char
         string_value = ''
         self.advance()
@@ -56,33 +62,47 @@ class MathPyLexer:
         else:
             Exception('Incomplete input')
 
-        return Token(string_value, 'TT_STRING')
+        return Token(string_value, 'TT_STRING', line_start, column_start)
+
+    def make_number(self) -> Token:
+        line_start = self.current_line
+        column_start = self.current_column
+
+        number_string = self.current_char
+        self.advance()
+
+        while self.current_char in token_types['TT_DIGIT']:
+            number_string += self.current_char
+            self.advance()
+
+        return Token(int(number_string), 'TT_NUMBER', line_start, column_start)
+
+    # -------------------------- Tokenize process --------------------------
+
+    def default_tokenize_treatment(self, token_list: list, token_type: str) -> None:
+        token_list.append(Token(self.current_char, token_type, self.current_line, self.current_column))
+        self.advance()
 
     def tokenize(self) -> list[Token]:
         token_list = []
+        token_type_table = {
+            "TT_IGNORE": lambda: self.advance(),
+            "TT_NAME": lambda: token_list.append(self.make_name()),
+            "TT_QUOTE": lambda: token_list.append(self.make_string()),
+            "TT_DIGIT": lambda: token_list.append(self.make_number()),
+        }
 
         while self.current_char is not None:
-            if self.current_char in token_types['TT_IGNORE']:
-                self.advance()
+            current_tt_type = None
+            for current_tt, tt_values in token_types.items():
+                if current_tt[0] != '_' and self.current_char in tt_values:  # ignore keys that start with "_"
+                    current_tt_type = current_tt
 
-            elif self.current_char in token_types['TT_NEWLINE']:
-                token_list.append(Token(self.current_char, 'TT_NEWLINE', self.current_line, self.current_column))
-                self.advance()
-
-            elif self.current_char in token_types['TT_EQUALS_SIGN']:
-                token_list.append(Token(self.current_char, 'TT_EQUALS_SIGN', self.current_line, self.current_column))
-                self.advance()
-
-            elif self.current_char in token_types['TT_NAME']:
-                token = self.make_name()
-                token_list.append(token)
-
-            elif self.current_char in token_types['TT_QUOTE']:
-                token = self.make_string()
-                token_list.append(token)
-
-            else:
+            if current_tt_type is None:  # illegal char
                 raise Exception(
                     f'Illegal char {self.current_char !r} at line {self.current_line}, column {self.current_column}')
+            else:
+                function = token_type_table.get(current_tt_type, lambda: self.default_tokenize_treatment(token_list, current_tt_type))
+                function()
 
         return token_list

@@ -1,38 +1,48 @@
-from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableAssignNode
+from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableAssignNode, StringNode, NumberNode
 
 
 class MathPyParser:
-    def __init__(self, ast: list):
-        self.ast = ast
+    def __init__(self, token_list: list):
+        self.token_list = token_list
         self.current_token = None
         self.current_index = -1
+
+        self.advance()
 
     def advance(self) -> None:
         self.current_index += 1
 
-        if self.current_index >= len(self.ast):
+        if self.current_index >= len(self.token_list):
             self.current_token = None
         else:
-            self.current_token = self.ast[self.current_index]
+            self.current_token = self.token_list[self.current_index]
 
     def is_valid_index(self, index) -> bool:
-        return len(self.ast) > index
+        return len(self.token_list) > index
 
     def parse(self) -> MultipleStatementsNode:
         return self.multiple_statements()
 
+    # ------------ GRAMMAR IMPLEMENTATION ------------
+
     def atom(self, token=None):
         token = self.current_token if token is None else token
 
-    def term(self):
+        if token.tt_type == 'TT_STRING':
+            return StringNode(token)
+
+        elif token.tt_type == 'TT_NUMBER':
+            return NumberNode(token)
+
+    def term(self) -> BinaryOperationNode:
         return self._binary_operation(['+', '-'], self.atom)
 
-    def factor(self):
+    def factor(self) -> BinaryOperationNode:
         return self._binary_operation(['*', '/', '//', '%'], self.term)
 
     def statement(self):
         token = self.current_token
-        next_token = self.ast[self.current_index + 1] if self.is_valid_index(self.current_index + 1) else None
+        next_token = self.token_list[self.current_index + 1] if self.is_valid_index(self.current_index + 1) else None
 
         if token.tt_type == 'TT_NAME':
             if next_token is not None and next_token.tt_type == 'TT_EQUALS_SIGN':
@@ -43,7 +53,10 @@ class MathPyParser:
     def multiple_statements(self) -> MultipleStatementsNode:
         statement_list = []
 
-        while self.current_token.tt_type == 'TT_NEWLINE':
+        if self.current_token.tt_type != 'TT_NEWLINE':
+            statement_list.append(self.statement())
+
+        while self.current_token is not None and self.current_token.tt_type == 'TT_NEWLINE':
             while self.current_token.tt_type == 'TT_NEWLINE':
                 self.advance()
 
@@ -76,4 +89,3 @@ class MathPyParser:
         value = self.atom()
 
         return VariableAssignNode(name, value)
-

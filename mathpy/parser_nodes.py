@@ -1,3 +1,25 @@
+class NumberNode:
+    def __init__(self, value_token):
+        self.value_token = value_token
+
+    def get_value(self):
+        return self.value_token.get_value()
+
+    def __repr__(self) -> str:
+        return f'NumberNode({self.value_token !r})'
+
+
+class StringNode:
+    def __init__(self, value_token):
+        self.value_token = value_token
+
+    def get_value(self):
+        return self.value_token.get_value()
+
+    def __repr__(self) -> str:
+        return f'StringNode({self.value_token !r})'
+
+
 class BinaryOperationNode:
     def __init__(self, left_expression, right_expression, operator):
         self.left_expression = left_expression

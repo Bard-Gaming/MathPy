@@ -1,10 +1,15 @@
 from .lexer import MathPyLexer
+from .parser import MathPyParser
+
 
 def run_file(file: open) -> None:
     file_contents = file.read() + "\n"
     file.close()
 
-    lexer = MathPyLexer(file_contents)
-    tokens = lexer.tokenize()
+    mp_lexer = MathPyLexer(file_contents)
+    tokens = mp_lexer.tokenize()
 
-    print(tokens)
+    mp_parser = MathPyParser(tokens)
+    ast = mp_parser.parse()
+
+    print(ast)

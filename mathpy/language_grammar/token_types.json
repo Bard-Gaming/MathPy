@@ -7,7 +7,7 @@
   "TT_QUOTE":           ["\"", "'"],
 
   "TT_NAME":            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_",
-  "TT_NAME_EXTENSION":  "-0123456789",
+  "_TT_NAME_EXTENSION":  "-0123456789",
 
-  "TT_DIGITS":          "0123456789"
+  "TT_DIGIT":          "0123456789"
 }
