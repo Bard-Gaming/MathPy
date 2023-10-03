@@ -1,3 +1,4 @@
+from .errors import MathPySyntaxError
 from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableAssignNode, StringNode, NumberNode
 
 
@@ -83,9 +84,11 @@ class MathPyParser:
         self.advance()
 
         if self.current_token.tt_type != 'TT_EQUALS_SIGN':
-            raise Exception('Syntax error: bla bla')
+            raise MathPySyntaxError("=", self.current_token)
         self.advance()
 
         value = self.atom()
+        if value is None:
+            raise MathPySyntaxError("value")
 
         return VariableAssignNode(name, value)

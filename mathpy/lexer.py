@@ -1,4 +1,5 @@
 from .tokens import Token
+from .errors import MathPyIllegalCharError
 from .common import module_folder
 import json
 
@@ -99,8 +100,8 @@ class MathPyLexer:
                     current_tt_type = current_tt
 
             if current_tt_type is None:  # illegal char
-                raise Exception(
-                    f'Illegal char {self.current_char !r} at line {self.current_line}, column {self.current_column}')
+                raise MathPyIllegalCharError(f'Invalid character {self.current_char !r} at line {self.current_line}, column {self.current_column}')
+
             else:
                 function = token_type_table.get(current_tt_type, lambda: self.default_tokenize_treatment(token_list, current_tt_type))
                 function()
