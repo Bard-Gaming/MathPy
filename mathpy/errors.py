@@ -17,3 +17,6 @@ class MathPyIllegalCharError(SyntaxError):
 
 class MathPyTypeError(TypeError):
     pass
+
+class MathPyValueError(ValueError):
+    pass
