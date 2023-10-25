@@ -24,17 +24,85 @@ représentée sous forme décimale, tel: $(50713653423)_{10}$
 
 Le but du tout est de trouver les avantages/désavantages d'une représentation sous forme de nombre de chaînes de caractères en informatique. On prendra particulièrement soin de toujours indiquer la complexité des opérations, à usage exclusif du langage de programmation Python (3.11).
 
-\section*{Indice d'un nombre}
-On essaie de simuler la fonctionalité d'indices présents dans les chaînes de caractères en Python. \\\
+\section*{Longueur d'un nombre}
+On essaie de trouver un moyen efficace d'exprimer la longueur d'un nombre en une base quelconque (la longueur étant la quantité de chiffres dans le nombre pour une base donnée).
 
-$\forall b \in \mathbb{N}^{+} - \{0, 1\}$ représentant le nombre d'éléments dans
+On note la longueur de $x_{b}$ "len$(x)$". Exemple: len$(1234_{10}) = 4$, car en base 10, le nombre $1234$ contient les chiffres $\{1; 2; 3; 4\}$, et card$(\{1; 2; 3; 4\}) = 4$.
+\\
+
+On pose: \\
+
+$\forall b \in \mathbb{N} - \{0; 1\}$ représentant la base b de symboles l'ensemble $\mathbb{B}$
+
+$\forall x_{b} \in \mathbb{N}^{*}$ représentant le nombre $x$ sous la base $b$
+
+$\forall n \in \mathbb{N}^{*}$, tel que $n =$ len$(x_{b}) - 1$
+
+$x = \varepsilon \times b^{n}$ \\
+
+\newpage
+
+On sait que: \\
+
+
+$\bullet$  $1 \leqslant \varepsilon < b$, car $n$ est  l'exposant de l'ordre de grandeur de $x_{b}$, \\
+et $1 \leqslant \frac{x_{b}}{b^{n}} \leqslant b$
+
+$\bullet$  $1$; $\varepsilon$; $b$ sont positifs d'après leur définition. \\
+
+
+\begin{align*}
+1 \leqslant \varepsilon < b
+
+\Rightarrow log_{b}(1) \leqslant  log_{b}(\varepsilon) < log_{b}(b)
+
+\Rightarrow 0 \leqslant log_{b}(\varepsilon) < 1
+
+\Rightarrow  E \left( log_{b} \left( \varepsilon \right) \right) = 0
+\end{align*} \\
+
+Continuant:
+
+\begin{align*}
+x = \varepsilon \times b^{n}
+
+\Rightarrow log_{b} \left( x \right) = log_{b} \left( \varepsilon \times b^{n} \right)
+
+\Rightarrow log_{b} \left( x \right) = log_{b} \left( \varepsilon \right) +
+log_{b} \left( b^{n} \right)
+
+\Rightarrow log_{b} \left( x \right) = log_{b} \left( \varepsilon \right) + n
+
+\Rightarrow E \left( log_{b} \left( x \right) \right) = E \left( log_{b} \left( \varepsilon \right) + n \right)
+
+Or, $n$ est un entier, donc: $n = E \left( n \right)$
+
+\Rightarrow E \left( log_{b} \left( x \right) \right) = E \left( log_{b} \left( \varepsilon \right) \right) + n
+
+Comme démontré auparavant, on a: $E \left( log_{b} \left( \varepsilon \right) \right) = 0$, donc:
+
+\Rightarrow E \left( log_{b} \left( x \right) \right) = n
+\end{align*} \\\
+
+Donc, pour calculer la longueur d'une chaîne de caractères composé d'un nombre représenté en n'importe quelle base, on a:
+
+\begin{equation}
+len \left( x \right) = E \left( log_{b} \left( x \right) \right)
+\end{equation}
+
+\newpage
+
+\section*{Indice d'un nombre}
+On essaie de simuler la fonctionalité d'indices présents dans les chaînes de caractères en Python. \\
+
+$\forall b \in \mathbb{N} - \{0; 1\}$ représentant le nombre d'éléments dans
 $\mathbb{B}$
 
-$\forall x \in \mathbb{N}^*$ représenté sous forme $\mathbb{B}$
+$\forall x \in \mathbb{N}^{*}$ représenté sous forme $\mathbb{B}$
 
 $\forall n \in \mathbb{N}$, tel que $n <$ la quantité de chiffres dans $x_{\mathbb{B}}$
 
-\\\
+\\
 
 On note $x_{\mathbb{B}}[n]$ le chiffre dans $x$ sous forme $\mathbb{B}$ d'indice $n$ partant de la droite.
 
@@ -43,11 +111,12 @@ on a: $x[0] = "r"_{\mathbb{B}}$ ($0$ étant la place des unités) et $x[2] = "o"
 
 De plus, on note $E(x)$ la fonction de la partie entière, tel que $E(3,14) = 3$.
 
-On pose: \\\
+On pose: \\
 \begin{equation}
 x_{\mathbb{B}}[n] = E \left(\frac{x - E \left(\frac{x}{b^{n + 1}} \right) \times b^{n + 1}}{b^{n}} \right)
 \end{equation}
-\newpage
+
+
 Prenons $x = 4321$ et $b = 10$ (donc le système décimal).
 
 
@@ -95,15 +164,14 @@ E \left( \frac{x}{b^{n+1}} \right) \times b^{n+1} = E \left( \frac{4321}{10000} 
 
 Donc la formule peut aussi être utilisée pour $x[3]$.
 
-\newpage
 \section*{Indice d'un nombre en Python}
-Afin de uniformiser la notation d'indice de chaîne de caractères avec celle de l'informatique, on pose: \\\
-$\forall x \in \mathbb{N}^{*}$ en base $\mathbb{B}$ \\\
-$i \in \mathbb{N}$, l'indice d'un chiffre dans $x_\mathbb{B}$ partant de la gauche (et non la droite comme pour $n$) \\\
-$l \in \mathbb{N}^{*}$ la quantité de chiffres dans $x_\mathbb{B}$. \\\
+Afin de uniformiser la notation d'indice de chaîne de caractères avec celle de l'informatique, on pose: \\
+$\forall x \in \mathbb{N}^{*}$ en base $\mathbb{B}$ \\
+$i \in \mathbb{N}$, l'indice d'un chiffre dans $x_\mathbb{B}$ partant de la gauche (et non la droite comme pour $n$) \\
+$l \in \mathbb{N}^{*}$ la quantité de chiffres dans $x_\mathbb{B}$. \\
 
 
-Ainsi, on a: \\\
+Ainsi, on a: \\
 $i = l - n$; ou, pour adopter une notation de Python: $i = $ len$(x) - n$
 
 \end{document}

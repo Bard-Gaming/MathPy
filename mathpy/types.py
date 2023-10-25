@@ -1,4 +1,5 @@
 from .errors import MathPyIndexError, MathPyTypeError, MathPyValueError
+from math import log
 
 
 class MathPyNull:
@@ -114,12 +115,7 @@ class MathPyString:
 
     # ------- Miscellaneous ------- :
     def __len__(self) -> int:
-        value = self.value
-        counter = 0
-        while value > 0:
-            counter += 1
-            value //= self.base_number
-        return counter
+        return int(log(self.value, self.base_number)) + 1  # ceil(log_{b}(x)) = len(x)
 
     def __getitem__(self, index: int) -> "MathPyString":
         if type(index) is not int:
@@ -157,8 +153,3 @@ class MathPyString:
 
     def __repr__(self) -> str:
         return f'MathPyString({self.value})'
-
-
-if __name__ == '__main__':
-    a = MathPyString('bonjour')
-    print(a[0])
