@@ -18,5 +18,10 @@ class MathPyIllegalCharError(SyntaxError):
 class MathPyTypeError(TypeError):
     pass
 
+
 class MathPyValueError(ValueError):
+    pass
+
+
+class MathPyNameError(NameError):
     pass

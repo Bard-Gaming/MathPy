@@ -33,16 +33,31 @@ class BinaryOperationNode:
         return f'BinaryOperationNode({self.left_expression !r}, {self.right_expression !r}, {self.operator !r})'
 
 
+class VariableDefineNode:
+    def __init__(self, name, value: any = None):
+        self.name = name  # name is a Token
+        self.value = value  # None or a Node
+
+    def get_name(self) -> str:
+        return self.name.get_value()  # get Token's value
+
+    def get_value(self) -> any:
+        return self.value  # is either None or a Node
+
+    def __repr__(self) -> str:
+        return f'VariableDefineNode({self.name !r}, {self.value !r})'
+
+
 class VariableAssignNode:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+    def __init__(self, name, value: any):
+        self.name = name  # name is a Token
+        self.value = value  # value is a Node
 
     def get_name(self):
-        return self.name.get_value()
+        return self.name.get_value()  # get Token's value
 
     def get_value(self):
-        return self.value
+        return self.value  # value is a Node
 
     def __repr__(self) -> str:
         return f'VariableAssignNode({self.name !r}, {self.value !r})'

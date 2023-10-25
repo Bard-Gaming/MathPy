@@ -6,6 +6,9 @@ import json
 with open(f'{module_folder}/language_grammar/token_types.json', 'rt', encoding='utf-8') as token_types_file:
     token_types = json.loads(token_types_file.read())
 
+with open(f'{module_folder}/language_grammar/keywords.json', 'rt', encoding='utf-8') as keywords_file:
+    token_keywords: dict = json.loads(keywords_file.read())
+
 
 class MathPyLexer:
     default_treatment_types = token_types['TT_NEWLINE'] + token_types['TT_EQUALS_SIGN']
@@ -43,6 +46,9 @@ class MathPyLexer:
         while self.current_char in token_types['TT_NAME'] + token_types['_TT_NAME_EXTENSION']:
             name += self.current_char
             self.advance()
+
+        if name in token_keywords.keys():
+            return Token(name, token_keywords[name], line_start, column_start)
 
         return Token(name, 'TT_NAME', line_start, column_start)
 

@@ -1,5 +1,5 @@
 from .errors import MathPySyntaxError
-from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableAssignNode, StringNode, NumberNode
+from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode, StringNode, NumberNode
 
 
 class MathPyParser:
@@ -45,7 +45,10 @@ class MathPyParser:
         token = self.current_token
         next_token = self.token_list[self.current_index + 1] if self.is_valid_index(self.current_index + 1) else None
 
-        if token.tt_type == 'TT_NAME':
+        if token.tt_type == 'TT_VARIABLE_DEFINE':
+            return self.define_variable()
+
+        elif token.tt_type == 'TT_NAME':
             if next_token is not None and next_token.tt_type == 'TT_EQUALS_SIGN':
                 return self.assign_variable()
 
@@ -58,7 +61,7 @@ class MathPyParser:
             statement_list.append(self.statement())
 
         while self.current_token is not None and self.current_token.tt_type == 'TT_NEWLINE':
-            while self.current_token.tt_type == 'TT_NEWLINE':
+            while self.current_token is not None and self.current_token.tt_type == 'TT_NEWLINE':
                 self.advance()
 
             if self.current_token is not None:
@@ -79,6 +82,23 @@ class MathPyParser:
             left_node = BinaryOperationNode(left_node, right_node, operator)
         return left_node
 
+    def define_variable(self) -> VariableDefineNode:
+        self.advance()  # skip 'var' token
+
+        if self.current_token.tt_type != 'TT_NAME':
+            raise MathPySyntaxError('name', self.current_token)
+        name = self.current_token
+
+        self.advance()
+
+        if self.current_token.tt_type != 'TT_EQUALS_SIGN':
+            return VariableDefineNode(name)  # declare without value
+
+        else:
+            self.advance()
+            value = self.factor()
+            return VariableDefineNode(name, value)  # declare with value
+
     def assign_variable(self) -> VariableAssignNode:
         name = self.current_token
         self.advance()
@@ -87,7 +107,7 @@ class MathPyParser:
             raise MathPySyntaxError("=", self.current_token)
         self.advance()
 
-        value = self.atom()
+        value = self.factor()
         if value is None:
             raise MathPySyntaxError("value")
 

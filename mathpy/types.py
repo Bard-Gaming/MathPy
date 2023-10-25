@@ -1,13 +1,19 @@
-from errors import MathPyIndexError, MathPyTypeError, MathPyValueError
+from .errors import MathPyIndexError, MathPyTypeError, MathPyValueError
+
+
+class MathPyNull:
+    def __repr__(self) -> str:
+        return 'MathPyNull()'
 
 
 class MathPyString:
     # generated from language_grammar/string_base.json
     base_chars = [
-        ' ','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
-        'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','ä',
-        'ö','ü','é','è','ê','à','ù','Ä','Ö','Ü','È','Ê','À','Ù','ß','µ','0','1','2','3','4','5','6','7','8','9','(',
-        ')','[',']','{','}','?','.','!',':',';','_','&','#','`','°','@','+','-','*','/','§',"'",'%',
+        ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+        'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+        'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'ä', 'ö', 'ü', 'é', 'è', 'ê', 'à', 'ù', 'Ä', 'Ö', 'Ü', 'È', 'Ê',
+        'À', 'Ù', 'ß', 'µ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '(', ')', '[', ']', '{', '}', '?', '.',
+        '!', ':', ';', '_', '&', '#', '`', '°', '@', '+', '-', '*', '/', '§', "'", '%',
     ]
 
     base_char_lookup = {char: index for index, char in enumerate(base_chars)}
@@ -46,7 +52,9 @@ class MathPyString:
 
         return MathPyString(
             sum(
-                ((self.value // self.base_number ** i) - ((self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (length - i) for i in range(length + 1)
+                ((self.value // self.base_number ** i) - (
+                            (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
+                            length - i) for i in range(length + 1)
             )
         )
 
@@ -59,7 +67,8 @@ class MathPyString:
             return MathPyString(eval(f'self.value {operator} other.value'))
 
         else:
-            raise MathPyTypeError(f'Invalid operand types for {operator !r}: \'MathPyString\' and {type(other).__name__ !r}')
+            raise MathPyTypeError(
+                f'Invalid operand types for {operator !r}: \'MathPyString\' and {type(other).__name__ !r}')
 
     def __mul__(self, other) -> "MathPyString":
         return self.__binary_operation(other, '*')
@@ -85,7 +94,8 @@ class MathPyString:
             return eval(f'self.value {operator} other.value')
 
         else:
-            raise MathPyTypeError(f'Invalid operand types for {operator !r}: \'MathPyString\' and {type(other).__name__ !r}')
+            raise MathPyTypeError(
+                f'Invalid operand types for {operator !r}: \'MathPyString\' and {type(other).__name__ !r}')
 
     def __lt__(self, other) -> bool:
         return self.__logic_operation(other, '<')
@@ -139,7 +149,8 @@ class MathPyString:
             raise NotImplementedError('Optimized way still yet to be found')
 
         else:
-            raise MathPyTypeError(f'\'in {self !s}\' requires \'MathPyString\' or \'MathPyInt\' as left operand, not {type(char).__name__ !r}')
+            raise MathPyTypeError(
+                f'\'in {self !s}\' requires \'MathPyString\' or \'MathPyInt\' as left operand, not {type(char).__name__ !r}')
 
     def __str__(self) -> str:
         return self.string_from_value(self.value)

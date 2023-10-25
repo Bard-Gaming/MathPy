@@ -1,1 +1,3 @@
-a = "bonjour"
+var a;
+
+a = "bonjour";

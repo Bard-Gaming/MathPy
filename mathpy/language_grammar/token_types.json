@@ -1,6 +1,6 @@
 {
-  "TT_IGNORE":          [" "],
-  "TT_NEWLINE":         ["\n", ";"],
+  "TT_IGNORE":          [" ", "\n"],
+  "TT_NEWLINE":         [";"],
 
   "TT_EQUALS_SIGN":     ["="],
 
