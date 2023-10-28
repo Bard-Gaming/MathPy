@@ -82,7 +82,7 @@ class MathPyLexer:
             number_string += self.current_char
             self.advance()
 
-        return Token(int(number_string), 'TT_NUMBER', line_start, column_start)
+        return Token(number_string, 'TT_NUMBER', line_start, column_start)
 
     # -------------------------- Tokenize process --------------------------
 

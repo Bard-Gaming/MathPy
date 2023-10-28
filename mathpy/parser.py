@@ -1,5 +1,6 @@
 from .errors import MathPySyntaxError
 from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode, StringNode, NumberNode
+from .common import call_logger
 
 
 class MathPyParser:
@@ -20,6 +21,10 @@ class MathPyParser:
 
     def is_valid_index(self, index) -> bool:
         return len(self.token_list) > index
+
+    @property
+    def future_token(self):
+        return self.token_list[self.current_index + 1] if self.is_valid_index(self.current_index + 1) else None
 
     def parse(self) -> MultipleStatementsNode:
         return self.multiple_statements()
@@ -74,12 +79,15 @@ class MathPyParser:
 
         left_node = left_function()
 
-        if self.current_token.get_value() in operators:
+        if self.future_token is not None and self.future_token.get_value() in operators:
+            self.advance()
+
             operator = self.current_token
             self.advance()
 
             right_node = function()
             left_node = BinaryOperationNode(left_node, right_node, operator)
+
         return left_node
 
     def define_variable(self) -> VariableDefineNode:
@@ -96,6 +104,7 @@ class MathPyParser:
 
         else:
             self.advance()
+
             value = self.factor()
             return VariableDefineNode(name, value)  # declare with value
 

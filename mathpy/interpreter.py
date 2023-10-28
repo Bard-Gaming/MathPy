@@ -1,5 +1,5 @@
 from .errors import MathPyNameError
-from .types import MathPyNull, MathPyString
+from .types import MathPyNull, MathPyString, MathPyInt, MathPyFloat
 
 
 class MathPySymbolTable:
@@ -73,6 +73,13 @@ class MathPyInterpreter:
     def visit_StringNode(self, node, context: MathPyContext):
         return MathPyString(node.get_value())
 
+    def visit_NumberNode(self, node, context: MathPyContext):
+        raw_number = node.get_value()
+        if '.' in raw_number:
+            return MathPyFloat(float(raw_number))
+        else:
+            return MathPyInt(int(raw_number))
+
     def visit_VariableDefineNode(self, node, context: MathPyContext):
         variable_name: str = node.get_name()
         variable_value = node.get_value()
@@ -90,6 +97,7 @@ class MathPyInterpreter:
     def visit_BinaryOperationNode(self, node, context: MathPyContext):
         left_value, operator, right_value = node.get_value()
         left_value = self.visit(left_value, context)
+        operator = operator.get_value()  # operator was Token, now str
         right_value = self.visit(right_value, context)
 
         print(eval(f"left_value {operator} right_value"))

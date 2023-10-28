@@ -8,16 +8,19 @@ class MathPyNull:
 
 
 class MathPyNumber:
-    def __init__(self, value: int | float):
+    def __init__(self, value: int | float):  # To be called before self.accepted_values is changed
         self.accepted_operations = (MathPyNumber, MathPyInt, MathPyString)
         self.value = value
 
     # ------- Binary Operations ------- :
     def __binary_operation(self, other, operator: str):
-        if type(other) is int:
+        if isinstance(other, (float, int)):
             return self.__class__(eval(f'self.value {operator} other'))
 
-        elif type(other) in self.accepted_operations:
+        elif isinstance(other, self.accepted_operations):
+            if isinstance(other, MathPyString):  # turn to MathPyString if 'self' or 'other' is MathPyString
+                return MathPyString(eval(f'self.value {operator} other.value'))
+
             return self.__class__(eval(f'self.value {operator} other.value'))
 
         else:
@@ -39,45 +42,28 @@ class MathPyNumber:
     def __sub__(self, other):
         return self.__binary_operation(other, '-')
 
+    # ------- Miscellaneous ------- :
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}({self.value})'
+
 
 class MathPyInt(MathPyNumber):
     def __init__(self, value):
-        match value:
-            case float():
-                value = int(value)
-            case str():
-                try:
-                    value = int(value)
-                except ValueError as err:
-                    raise MathPyValueError(f'Expected Integer, got {value !r}') from err
-            case int():
-                value = value
-            case _:
-                raise MathPyValueError(f'Expected Integer, got {value !r}')
+        if not isinstance(value, (int, float)):
+            raise ValueError(f'{value !r} is not of type \'int\' or \'float\'')
 
-        super().__init__(value)
+        super().__init__(int(value))  # cast to 'int' in case it's a float
 
 
 class MathPyFloat(MathPyNumber):
     def __init__(self, value):
-        match value:
-            case float():
-                value = value
-            case int():
-                value = value
-            case str():
-                try:
-                    value = float(value)
-                except ValueError as err:
-                    raise MathPyValueError(f'Expected floating point number, got {value !r}') from err
-            case _:
-                raise MathPyValueError(f'Expected Integer, got {value !r}')
+        if not isinstance(value, float):
+            raise ValueError(f'{value !r} is not of type \'float\'')
 
         super().__init__(value)
-        self.accepted_operations = (MathPyNumber, MathPyInt)
 
 
-class MathPyString:
+class MathPyString(MathPyNumber):
     # generated from language_grammar/string_base.json
     base_chars = [
         ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
@@ -93,12 +79,13 @@ class MathPyString:
     def __init__(self, value: str | int):
         match value:
             case str():
-                self.value = self.value_from_string(value)
+                value = self.value_from_string(value)
             case int():
-                self.value = value
+                pass
             case _:
                 raise MathPyTypeError(f'Expected either \'str\' or \'int\', got {type(value).__name__ !r}')
 
+        super().__init__(value)
         self.accepted_types = (MathPyString, MathPyInt)
 
     def value_from_string(self, text: str) -> int:
@@ -222,6 +209,3 @@ class MathPyString:
 
     def __str__(self) -> str:
         return self.string_from_value(self.value)
-
-    def __repr__(self) -> str:
-        return f'MathPyString({self.value})'
