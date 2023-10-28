@@ -1,14 +1,18 @@
 {
-  "TT_IGNORE":          [" ", "\n"],
-  "TT_NEWLINE":         [";"],
+  "TT_IGNORE":            [" ", "\n"],
+  "TT_NEWLINE":           [";"],
 
-  "TT_EQUALS_SIGN":     ["="],
-  "TT_BINARY_OPERATOR": ["+", "-", "*", "/"],
+  "TT_EQUALS_SIGN":       ["="],
+  "TT_BINARY_OPERATOR":   ["+", "-", "*", "/"],
 
-  "TT_QUOTE":           ["\"", "'"],
+  "TT_DOT":               ["."],
+  "TT_LEFT_PARENTHESIS":  ["("],
+  "TT_RIGHT_PARENTHESIS": [")"],
 
-  "TT_NAME":            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_",
-  "_TT_NAME_EXTENSION":  "-0123456789",
+  "TT_QUOTE":             ["\"", "'"],
 
-  "TT_DIGIT":          "0123456789"
+  "TT_NAME":              "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_",
+  "_TT_NAME_EXTENSION":   "-0123456789",
+
+  "TT_DIGIT":             "0123456789"
 }

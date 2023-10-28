@@ -29,7 +29,7 @@ class MathPyParser:
     def parse(self) -> MultipleStatementsNode:
         return self.multiple_statements()
 
-    # ------------ GRAMMAR IMPLEMENTATION ------------
+    # ------------------ Language Grammar ------------------ :
 
     def atom(self, token=None):
         token = self.current_token if token is None else token
@@ -38,16 +38,30 @@ class MathPyParser:
             return self.access_variable()
 
         elif token.tt_type == 'TT_STRING':
+            self.advance()
             return StringNode(token)
 
         elif token.tt_type == 'TT_NUMBER':
+            self.advance()
             return NumberNode(token)
 
-    def term(self) -> BinaryOperationNode:
-        return self._binary_operation(['+', '-'], self.atom)
+        elif token.tt_type == 'TT_LEFT_PARENTHESIS':
+            self.advance()  # skip left parenthesis
+            expression = self.expression()
+            if self.current_token.tt_type == 'TT_RIGHT_PARENTHESIS':
+                self.advance()  # skip right parenthesis
+                return expression
+            else:
+                raise MathPySyntaxError(")", self.current_token)
 
-    def factor(self) -> BinaryOperationNode:
-        return self._binary_operation(['*', '/', '//', '%'], self.term)
+    def factor(self):
+        return self._binary_operation(['*', '/', '//', '%'], self.atom)
+
+    def term(self):
+        return self._binary_operation(['+', '-'], self.factor)
+
+    def expression(self):
+        return self.term()
 
     def statement(self):
         token = self.current_token
@@ -59,7 +73,7 @@ class MathPyParser:
             if self.future_token is not None and self.future_token.tt_type == 'TT_EQUALS_SIGN':
                 return self.assign_variable()
 
-        return self.factor()
+        return self.expression()
 
     def multiple_statements(self) -> MultipleStatementsNode:
         statement_list = []
@@ -76,20 +90,17 @@ class MathPyParser:
 
         return MultipleStatementsNode(statement_list)
 
-    def _binary_operation(self, operators: list, function, left_function=None) -> BinaryOperationNode:
-        left_function = function if left_function is None else left_function
+    # ------------------ Implementation ------------------ :
 
-        left_node = left_function()
+    def _binary_operation(self, operators: list, function) -> BinaryOperationNode:
+        left_node = function()
 
-        if self.future_token is not None and self.future_token.get_value() in operators:
-            self.advance()
-
+        while self.current_token.get_value() in operators:
             operator = self.current_token
             self.advance()
 
             right_node = function()
             left_node = BinaryOperationNode(left_node, right_node, operator)
-            self.advance()
 
         return left_node
 
@@ -106,9 +117,9 @@ class MathPyParser:
             return VariableDefineNode(name)  # declare without value
 
         else:
-            self.advance()
+            self.advance()  # skip equals sign
 
-            value = self.factor()
+            value = self.expression()
             return VariableDefineNode(name, value)  # declare with value
 
     def assign_variable(self) -> VariableAssignNode:
@@ -119,7 +130,7 @@ class MathPyParser:
             raise MathPySyntaxError("=", self.current_token)
         self.advance()
 
-        value = self.factor()
+        value = self.expression()
         if value is None:
             raise MathPySyntaxError("value")
 
@@ -131,4 +142,5 @@ class MathPyParser:
             raise MathPySyntaxError("name", self.current_token)
         name = self.current_token
 
+        self.advance()
         return VariableAccessNode(name)

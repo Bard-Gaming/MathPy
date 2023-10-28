@@ -74,7 +74,7 @@ class MathPyInterpreter:
         return MathPyString(node.get_value())
 
     def visit_NumberNode(self, node, context: MathPyContext):
-        raw_number = node.get_value()
+        raw_number: str = node.get_value()
         if '.' in raw_number:
             return MathPyFloat(float(raw_number))
         else:
@@ -100,9 +100,9 @@ class MathPyInterpreter:
 
     def visit_BinaryOperationNode(self, node, context: MathPyContext):
         left_value, operator, right_value = node.get_value()
-        left_value = self.visit(left_value, context)  # is Parser Node
-        operator = operator.get_value()  # operator was Token, now str
-        right_value = self.visit(right_value, context)  # is Parser Node
+        left_value = self.visit(left_value, context)  # is Parser Node, turn to Custom Type
+        operator = operator.get_value()  # operator was Token, cast to 'str'
+        right_value = self.visit(right_value, context)  # is Parser Node, turn to Custom Type
 
         return eval(f"left_value {operator} right_value")
 

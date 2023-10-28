@@ -9,38 +9,47 @@ class MathPyNull:
 
 class MathPyNumber:
     def __init__(self, value: int | float):  # To be called before self.accepted_values is changed
-        self.accepted_operations = (MathPyNumber, MathPyInt, MathPyString)
+        self.accepted_operations = (MathPyFloat, MathPyInt, MathPyString)
         self.value = value
 
     # ------- Binary Operations ------- :
-    def __binary_operation(self, other, operator: str):
-        if isinstance(other, (float, int)):
-            return self.__class__(eval(f'self.value {operator} other'))
+    def _binary_operation(self, other, operator: str):
+        if MathPyString in self.accepted_operations and isinstance(other, MathPyString):  # if you are allowed to, cast
+            return MathPyString(eval(f'self.value {operator} other.value'))
 
-        elif isinstance(other, self.accepted_operations):
-            if isinstance(other, MathPyString):  # turn to MathPyString if 'self' or 'other' is MathPyString
-                return MathPyString(eval(f'self.value {operator} other.value'))
+        elif MathPyFloat in self.accepted_operations and isinstance(other, MathPyFloat):  # if you are allowed to, cast
+            return MathPyFloat(eval(f'self.value {operator} other.value'))
 
+        elif isinstance(other, self.accepted_operations):  # if priorities are unset, use own class
             return self.__class__(eval(f'self.value {operator} other.value'))
 
+        else:  # Unsupported operand types error
+            raise MathPyTypeError(
+                f'Invalid operand types for {operator !r}: {type(self).__name__ !r} and {type(other).__name__ !r}'
+            )
+
+    def _binary_operation_divide(self, other) -> "MathPyFloat":  # always return floats for normal/true division
+        if isinstance(other, self.accepted_operations):
+            return MathPyFloat(self.value / other.value)
         else:
             raise MathPyTypeError(
-                f'Invalid operand types for {operator !r}: \'{type(self).__name__ !r}\' and {type(other).__name__ !r}')
+                f'Invalid operand types for \'/\': {type(self).__name__ !r} and {type(other).__name__ !r}'
+            )
 
     def __mul__(self, other):
-        return self.__binary_operation(other, '*')
+        return self._binary_operation(other, '*')
 
     def __truediv__(self, other):
-        return self.__binary_operation(other, '/')
+        return self._binary_operation_divide(other)
 
     def __floordiv__(self, other):
-        return self.__binary_operation(other, '//')
+        return self._binary_operation(other, '//')
 
     def __add__(self, other):
-        return self.__binary_operation(other, '+')
+        return self._binary_operation(other, '+')
 
     def __sub__(self, other):
-        return self.__binary_operation(other, '-')
+        return self._binary_operation(other, '-')
 
     # ------- Miscellaneous ------- :
     def __repr__(self) -> str:
@@ -49,10 +58,11 @@ class MathPyNumber:
 
 class MathPyInt(MathPyNumber):
     def __init__(self, value):
-        if not isinstance(value, (int, float)):
-            raise ValueError(f'{value !r} is not of type \'int\' or \'float\'')
+        if not isinstance(value, int):
+            raise ValueError(f'{value !r} is not of type \'int\'')
 
-        super().__init__(int(value))  # cast to 'int' in case it's a float
+        super().__init__(value)  # cast to 'int' in case it's a float
+        self.accepted_operations = (MathPyInt, MathPyFloat, MathPyString)
 
 
 class MathPyFloat(MathPyNumber):
@@ -61,6 +71,7 @@ class MathPyFloat(MathPyNumber):
             raise ValueError(f'{value !r} is not of type \'float\'')
 
         super().__init__(value)
+        self.accepted_operations = (MathPyFloat, MathPyInt)
 
 
 class MathPyString(MathPyNumber):
@@ -86,7 +97,7 @@ class MathPyString(MathPyNumber):
                 raise MathPyTypeError(f'Expected either \'str\' or \'int\', got {type(value).__name__ !r}')
 
         super().__init__(value)
-        self.accepted_types = (MathPyString, MathPyInt)
+        self.accepted_operations = (MathPyInt, MathPyString)
 
     def value_from_string(self, text: str) -> int:
         """ follows: sum(digit * base^position) for every digit in a given number """
@@ -119,34 +130,11 @@ class MathPyString(MathPyNumber):
         )
 
     # ------- Binary Operations ------- :
-    def __binary_operation(self, other, operator: str) -> "MathPyString":
-        if isinstance(other, int):
-            return MathPyString(eval(f'self.value {operator} other'))
-
-        elif isinstance(other, self.accepted_types):
-            return MathPyString(eval(f'self.value {operator} other.value'))
-
-        else:
-            raise MathPyTypeError(
-                f'Invalid operand types for {operator !r}: \'MathPyString\' and {type(other).__name__ !r}')
-
-    def __mul__(self, other) -> "MathPyString":
-        return self.__binary_operation(other, '*')
-
     def __truediv__(self, other) -> "MathPyString":
-        return self.__binary_operation(other, '//')
-
-    def __floordiv__(self, other) -> "MathPyString":
-        return self.__binary_operation(other, '//')
-
-    def __add__(self, other) -> "MathPyString":
-        return self.__binary_operation(other, '+')
-
-    def __sub__(self, other) -> "MathPyString":
-        return self.__binary_operation(other, '-')
+        return self._binary_operation(other, '//')  # division = integer division for Strings
 
     # ------- Logic Operations ------- :
-    def __logic_operation(self, other, operator: str) -> bool:
+    def _logic_operation(self, other, operator: str) -> bool:
         if isinstance(other, int):  # TODO: Change int to MathPyInt
             return eval(f'self.value {operator} other')
 
@@ -158,19 +146,19 @@ class MathPyString(MathPyNumber):
                 f'Invalid operand types for {operator !r}: \'MathPyString\' and {type(other).__name__ !r}')
 
     def __lt__(self, other) -> bool:
-        return self.__logic_operation(other, '<')
+        return self._logic_operation(other, '<')
 
     def __le__(self, other) -> bool:
-        return self.__logic_operation(other, '<=')
+        return self._logic_operation(other, '<=')
 
     def __eq__(self, other) -> bool:
-        return self.__logic_operation(other, '==')
+        return self._logic_operation(other, '==')
 
     def __ge__(self, other) -> bool:
-        return self.__logic_operation(other, '>=')
+        return self._logic_operation(other, '>=')
 
     def __gt__(self, other) -> bool:
-        return self.__logic_operation(other, '>')
+        return self._logic_operation(other, '>')
 
     # ------- Miscellaneous ------- :
     def __len__(self) -> int:

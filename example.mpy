@@ -1,5 +1,7 @@
-var a;
-a = "bonjour";
-var b = a + 1;
-
-b = b + 1
+var a = (3 + "hello");
+var b = "hello" + 3;
+var c = "hello" + "hi";
+var d = 2.3 + 2;
+var e = 2 + 2.3;
+var f = "test";
+var g = (f + 1) / 2;

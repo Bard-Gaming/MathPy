@@ -78,7 +78,11 @@ class MathPyLexer:
         number_string = self.current_char
         self.advance()
 
-        while self.current_char in token_types['TT_DIGIT']:
+        has_dot = False
+        while self.current_char in token_types['TT_DIGIT'] or (self.current_char in token_types['TT_DOT'] and has_dot is False):
+            if self.current_char in token_types['TT_DOT']:
+                has_dot = True
+
             number_string += self.current_char
             self.advance()
 
