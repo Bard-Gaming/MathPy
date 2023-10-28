@@ -1,3 +1,5 @@
 var a;
 a = "bonjour";
-var b = "bonjour" + 1;
+var b = a + 1;
+
+b = b + 1

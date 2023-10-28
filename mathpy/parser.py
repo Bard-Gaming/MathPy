@@ -1,5 +1,5 @@
 from .errors import MathPySyntaxError
-from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode, StringNode, NumberNode
+from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode, VariableAccessNode, StringNode, NumberNode
 from .common import call_logger
 
 
@@ -34,7 +34,10 @@ class MathPyParser:
     def atom(self, token=None):
         token = self.current_token if token is None else token
 
-        if token.tt_type == 'TT_STRING':
+        if token.tt_type == 'TT_NAME':
+            return self.access_variable()
+
+        elif token.tt_type == 'TT_STRING':
             return StringNode(token)
 
         elif token.tt_type == 'TT_NUMBER':
@@ -48,13 +51,12 @@ class MathPyParser:
 
     def statement(self):
         token = self.current_token
-        next_token = self.token_list[self.current_index + 1] if self.is_valid_index(self.current_index + 1) else None
 
         if token.tt_type == 'TT_VARIABLE_DEFINE':
             return self.define_variable()
 
         elif token.tt_type == 'TT_NAME':
-            if next_token is not None and next_token.tt_type == 'TT_EQUALS_SIGN':
+            if self.future_token is not None and self.future_token.tt_type == 'TT_EQUALS_SIGN':
                 return self.assign_variable()
 
         return self.factor()
@@ -87,6 +89,7 @@ class MathPyParser:
 
             right_node = function()
             left_node = BinaryOperationNode(left_node, right_node, operator)
+            self.advance()
 
         return left_node
 
@@ -122,3 +125,10 @@ class MathPyParser:
 
         self.advance()
         return VariableAssignNode(name, value)
+
+    def access_variable(self) -> VariableAccessNode:
+        if self.current_token.tt_type != 'TT_NAME':
+            raise MathPySyntaxError("name", self.current_token)
+        name = self.current_token
+
+        return VariableAccessNode(name)

@@ -63,6 +63,17 @@ class VariableAssignNode:
         return f'VariableAssignNode({self.name !r}, {self.value !r})'
 
 
+class VariableAccessNode:
+    def __init__(self, name: "Token"):
+        self.name = name
+
+    def get_name(self):
+        return self.name.get_value()
+
+    def __repr__(self) -> str:
+        return f'VariableAccessNode({self.name !r})'
+
+
 class MultipleStatementsNode:
     def __init__(self, statement_list: list):
         self.statement_list = statement_list

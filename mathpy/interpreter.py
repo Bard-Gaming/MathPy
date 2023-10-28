@@ -82,7 +82,7 @@ class MathPyInterpreter:
 
     def visit_VariableDefineNode(self, node, context: MathPyContext):
         variable_name: str = node.get_name()
-        variable_value = node.get_value()
+        variable_value: any = node.get_value()
         if variable_value is not None:
             variable_value = self.visit(variable_value, context)  # visit node if it's not None
 
@@ -90,17 +90,19 @@ class MathPyInterpreter:
 
     def visit_VariableAssignNode(self, node, context: MathPyContext):
         variable_name: str = node.get_name()
-        variable_value = self.visit(node.get_value(), context)
+        variable_value: any = self.visit(node.get_value(), context)
 
         context.set(variable_name, variable_value)
 
+    def visit_VariableAccessNode(self, node, context: MathPyContext):
+        variable_name: str = node.get_name()
+        return self.context.get(variable_name)
+
     def visit_BinaryOperationNode(self, node, context: MathPyContext):
         left_value, operator, right_value = node.get_value()
-        left_value = self.visit(left_value, context)
+        left_value = self.visit(left_value, context)  # is Parser Node
         operator = operator.get_value()  # operator was Token, now str
-        right_value = self.visit(right_value, context)
-
-        print(eval(f"left_value {operator} right_value"))
+        right_value = self.visit(right_value, context)  # is Parser Node
 
         return eval(f"left_value {operator} right_value")
 
