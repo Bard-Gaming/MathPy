@@ -22,12 +22,12 @@ class StringNode:
 
 class BinaryOperationNode:
     def __init__(self, left_expression, right_expression, operator):
-        self.left_expression = left_expression
-        self.right_expression = right_expression
-        self.operator = operator
+        self.left_expression = left_expression  # node
+        self.right_expression = right_expression  # node
+        self.operator = operator  # str
 
     def get_value(self) -> tuple:
-        return self.left_expression, self.right_expression, self.operator
+        return self.left_expression, self.operator, self.right_expression
 
     def __repr__(self) -> str:
         return f'BinaryOperationNode({self.left_expression !r}, {self.right_expression !r}, {self.operator !r})'

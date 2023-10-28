@@ -7,6 +7,76 @@ class MathPyNull:
         return 'MathPyNull()'
 
 
+class MathPyNumber:
+    def __init__(self, value: int | float):
+        self.accepted_operations = (MathPyNumber, MathPyInt, MathPyString)
+        self.value = value
+
+    # ------- Binary Operations ------- :
+    def __binary_operation(self, other, operator: str):
+        if type(other) is int:
+            return self.__class__(eval(f'self.value {operator} other'))
+
+        elif type(other) in self.accepted_operations:
+            return self.__class__(eval(f'self.value {operator} other.value'))
+
+        else:
+            raise MathPyTypeError(
+                f'Invalid operand types for {operator !r}: \'{type(self).__name__ !r}\' and {type(other).__name__ !r}')
+
+    def __mul__(self, other):
+        return self.__binary_operation(other, '*')
+
+    def __truediv__(self, other):
+        return self.__binary_operation(other, '/')
+
+    def __floordiv__(self, other):
+        return self.__binary_operation(other, '//')
+
+    def __add__(self, other):
+        return self.__binary_operation(other, '+')
+
+    def __sub__(self, other):
+        return self.__binary_operation(other, '-')
+
+
+class MathPyInt(MathPyNumber):
+    def __init__(self, value):
+        match value:
+            case float():
+                value = int(value)
+            case str():
+                try:
+                    value = int(value)
+                except ValueError as err:
+                    raise MathPyValueError(f'Expected Integer, got {value !r}') from err
+            case int():
+                value = value
+            case _:
+                raise MathPyValueError(f'Expected Integer, got {value !r}')
+
+        super().__init__(value)
+
+
+class MathPyFloat(MathPyNumber):
+    def __init__(self, value):
+        match value:
+            case float():
+                value = value
+            case int():
+                value = value
+            case str():
+                try:
+                    value = float(value)
+                except ValueError as err:
+                    raise MathPyValueError(f'Expected floating point number, got {value !r}') from err
+            case _:
+                raise MathPyValueError(f'Expected Integer, got {value !r}')
+
+        super().__init__(value)
+        self.accepted_operations = (MathPyNumber, MathPyInt)
+
+
 class MathPyString:
     # generated from language_grammar/string_base.json
     base_chars = [
@@ -28,6 +98,8 @@ class MathPyString:
                 self.value = value
             case _:
                 raise MathPyTypeError(f'Expected either \'str\' or \'int\', got {type(value).__name__ !r}')
+
+        self.accepted_types = (MathPyString, MathPyInt)
 
     def value_from_string(self, text: str) -> int:
         """ follows: sum(digit * base^position) for every digit in a given number """
@@ -54,17 +126,17 @@ class MathPyString:
         return MathPyString(
             sum(
                 ((self.value // self.base_number ** i) - (
-                            (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
-                            length - i) for i in range(length + 1)
+                        (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
+                        length - i) for i in range(length + 1)
             )
         )
 
     # ------- Binary Operations ------- :
     def __binary_operation(self, other, operator: str) -> "MathPyString":
-        if type(other) is int:  # TODO: Change int to MathPyInt
+        if isinstance(other, int):
             return MathPyString(eval(f'self.value {operator} other'))
 
-        elif type(other) is MathPyString:
+        elif isinstance(other, self.accepted_types):
             return MathPyString(eval(f'self.value {operator} other.value'))
 
         else:

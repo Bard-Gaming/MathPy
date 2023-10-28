@@ -3,6 +3,7 @@
   "TT_NEWLINE":         [";"],
 
   "TT_EQUALS_SIGN":     ["="],
+  "TT_BINARY_OPERATOR": ["+", "-", "*", "/"],
 
   "TT_QUOTE":           ["\"", "'"],
 

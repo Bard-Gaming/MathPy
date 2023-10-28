@@ -87,6 +87,15 @@ class MathPyInterpreter:
 
         context.set(variable_name, variable_value)
 
+    def visit_BinaryOperationNode(self, node, context: MathPyContext):
+        left_value, operator, right_value = node.get_value()
+        left_value = self.visit(left_value, context)
+        right_value = self.visit(right_value, context)
+
+        print(eval(f"left_value {operator} right_value"))
+
+        return eval(f"left_value {operator} right_value")
+
     def visit_MultipleStatementsNode(self, node, context):
         visits: list = []
         for value in node.get_value():

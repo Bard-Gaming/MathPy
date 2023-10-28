@@ -1,3 +1,4 @@
 from mathpy import run_file
 
-run_file(open('example.mpy', 'rt', encoding='utf-8'))
+with open('example.mpy', 'rt', encoding='utf-8') as program_file:
+    run_file(program_file)

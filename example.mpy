@@ -1,3 +1,3 @@
 var a;
-
 a = "bonjour";
+var b = "bonjour" + 1;
