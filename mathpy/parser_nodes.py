@@ -99,3 +99,37 @@ class CodeBlockNode:
 
     def __repr__(self) -> str:
         return f'CodeBlockNode({self.block_body !r})'
+
+
+class FunctionDefineNode:
+    def __init__(self, function_name, parameter_names, body):
+        self.function_name = function_name  # is of type Token
+        self.parameter_names = parameter_names  # is list of Tokens
+        self.body = body  # is Node
+
+    def get_body(self):
+        return self.body  # Node, to be visited
+
+    def get_name(self):
+        return self.function_name.get_value()  # get Token's value
+
+    def get_parameter_names(self) -> list[str]:
+        return [token.get_value() for token in self.parameter_names]  # list of names
+
+    def __repr__(self) -> str:
+        return f"FunctionDefineNode({self.function_name !r}, {self.body !r})"
+
+
+class FunctionCallNode:
+    def __init__(self, function_name, parameter_values: list):
+        self.function_name = function_name  # is Token
+        self.parameter_values = parameter_values
+
+    def get_name(self) -> str:
+        return self.function_name.get_value()
+
+    def get_parameter_values(self) -> list:
+        return self.parameter_values
+
+    def __repr__(self) -> str:
+        return f'FunctionCallNode({self.function_name !r}, {self.parameter_values !r})'
