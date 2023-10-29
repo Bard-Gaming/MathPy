@@ -106,11 +106,16 @@ class MathPyInterpreter:
 
         return eval(f"left_value {operator} right_value")
 
-    def visit_MultipleStatementsNode(self, node, context):
+    def visit_MultipleStatementsNode(self, node, context: MathPyContext):
         visits: list = []
         for value in node.get_value():
             visits.append(self.visit(value, context))
 
+        return visits
+
+    def visit_CodeBlockNode(self, node, context: MathPyContext):
+        code_block_context = MathPyContext(parent=context, load_builtins=False)
+        visits = self.visit(node.get_value(), code_block_context)  # node.get_value() is MultipleStatementsNode
         return visits
 
     def visit_error(self, node, context):

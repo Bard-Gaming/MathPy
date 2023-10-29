@@ -1,6 +1,5 @@
 from .errors import MathPySyntaxError
-from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode, VariableAccessNode, StringNode, NumberNode
-from .common import call_logger
+from .parser_nodes import MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode, VariableAccessNode, StringNode, NumberNode, CodeBlockNode
 
 
 class MathPyParser:
@@ -72,6 +71,16 @@ class MathPyParser:
         elif token.tt_type == 'TT_NAME':
             if self.future_token is not None and self.future_token.tt_type == 'TT_EQUALS_SIGN':
                 return self.assign_variable()
+
+        elif token.tt_type == 'TT_LEFT_BRACE':
+            self.advance()  # skip left brace
+            code_block_body = self.multiple_statements()
+
+            if self.current_token.tt_type == 'TT_RIGHT_BRACE':
+                self.advance()  # skip right brace
+                return CodeBlockNode(code_block_body)
+            else:
+                raise MathPySyntaxError('}', self.current_token)
 
         return self.expression()
 

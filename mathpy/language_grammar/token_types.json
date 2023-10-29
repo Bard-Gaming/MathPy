@@ -6,8 +6,12 @@
   "TT_BINARY_OPERATOR":   ["+", "-", "*", "/"],
 
   "TT_DOT":               ["."],
+
   "TT_LEFT_PARENTHESIS":  ["("],
   "TT_RIGHT_PARENTHESIS": [")"],
+
+  "TT_LEFT_BRACE":        ["{"],
+  "TT_RIGHT_BRACE":       ["}"],
 
   "TT_QUOTE":             ["\"", "'"],
 

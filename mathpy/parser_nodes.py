@@ -84,3 +84,13 @@ class MultipleStatementsNode:
     def __repr__(self) -> str:
         return f'MultipleStatementsNode({self.statement_list !r})'
 
+
+class CodeBlockNode:
+    def __init__(self, block_body):
+        self.block_body = block_body  # MultipleStatementsNode
+
+    def get_value(self) -> MultipleStatementsNode:
+        return self.block_body
+
+    def __repr__(self) -> str:
+        return f'CodeBlockNode({self.block_body !r})'
