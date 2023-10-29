@@ -197,3 +197,33 @@ class MathPyString(MathPyNumber):
 
     def __str__(self) -> str:
         return self.string_from_value(self.value)
+
+
+class MathPyFunction:
+    def __init__(self, parameter_names: list, body, parent_context, function_name: str = None):
+        self.parameter_names = parameter_names
+        self.body = body
+        self.parent_context = parent_context
+        self.function_name = function_name
+
+    def call(self, *args):
+        if len(args) != len(self.parameter_names):
+            raise MathPyTypeError(f'{self.function_name}() takes {len(self.parameter_names)} arguments, {len(args)} given.')
+
+        from .interpreter import MathPyContext, MathPyInterpreter
+        function_context = MathPyContext(
+            parent=self.parent_context, load_builtins=False, display_name=self.function_name
+        )
+        function_interpreter = MathPyInterpreter()
+
+        # Set all values for parameters in local context
+        for i in range(len(args)):
+            argument = args[i]
+            argument_name = self.parameter_names[i]
+            function_context.declare(argument_name, argument)
+
+        function_output = function_interpreter.visit(self.body, function_context)
+        return function_output
+
+    def __repr__(self) -> str:
+        return f'MathPyFunction({self.parameter_names !r}, {self.body !r}, {self.parent_context !r}, {self.function_name !r})'
