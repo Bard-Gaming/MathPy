@@ -1,5 +1,5 @@
 from .errors import MathPyNameError
-from .types import MathPyNull, MathPyString, MathPyInt, MathPyFloat
+from .types import MathPyNull, MathPyString, MathPyInt, MathPyFloat, MathPyFunction
 
 
 class MathPySymbolTable:
@@ -9,30 +9,26 @@ class MathPySymbolTable:
 
     def get(self, symbol: str, *, raise_error: bool = True) -> any:
         value = self.table.get(symbol)
-        if value is None and self.parent is not None:
-            value = self.parent.get(symbol, raise_error=raise_error)  # propagate raise_error
 
-        elif value is None and self.parent is None and raise_error is True:
+        if value is None:
+            if self.parent is not None:  # if value not found, search in parent (if it exists)
+                return self.parent.get(symbol)
+
             raise MathPyNameError(f'Name {symbol !r} is not defined')
-
-        elif value is None and self.parent is None and raise_error is False:
-            value = None
 
         return value
 
     def set(self, symbol: str, new_value: any) -> None:
-        if self.parent is not None and self.parent.get(symbol) is not None:
-            self.parent.set(symbol, new_value)  # change value in parent table
-            return
-
-        symbol_value = self.get(symbol, raise_error=False)  # store value to avoid multiple calls
-
-        if symbol_value is None:
+        if self.get(symbol) is None:
             raise MathPyNameError(f'Name {symbol !r} was not declared in current scope')
 
-        self.table[symbol] = new_value  # safe to set value now
+        if self.parent is not None and self.table.get(symbol) is None:
+            self.parent.set(symbol, new_value)  # symbol defined in a parent, so change in parent
+
+        self.table[symbol] = new_value  # symbol defined in self, so change own symbol table
 
     def declare(self, symbol: str, value: any) -> None:
+        # even if symbol is declared in parent, declare new local variable
         self.table[symbol] = value if value is not None else MathPyNull()
 
     def __repr__(self) -> str:
@@ -40,8 +36,9 @@ class MathPySymbolTable:
 
 
 class MathPyContext:
-    def __init__(self, *, parent: "MathPyContext" = None, load_builtins: bool = False):
+    def __init__(self, *, parent: "MathPyContext" = None, load_builtins: bool = False, display_name: str = "main"):
         self.parent = parent
+        self.display_name = display_name
         self.symbol_table = MathPySymbolTable() if parent is None else MathPySymbolTable(parent=parent.symbol_table)
 
     def get(self, symbol: str) -> any:
@@ -53,17 +50,19 @@ class MathPyContext:
     def declare(self, symbol: str, value: any) -> None:
         return self.symbol_table.declare(symbol, value)
 
+    def __str__(self) -> str:
+        return f"<context at {self.display_name !r}>"
+
     def __repr__(self) -> str:
-        return f'MathPyContext(parent={self.parent !r})'
+        return f'MathPyContext(display_name={self.display_name !r}, parent={self.parent !r})'
 
 
 class MathPyInterpreter:
-    def __init__(self, abstract_syntax_tree):
-        self.abstract_syntax_tree = abstract_syntax_tree
+    def __init__(self):
         self.context = MathPyContext(load_builtins=True)
 
-    def interpret(self):
-        self.visit(self.abstract_syntax_tree, self.context)
+    def interpret(self, ast):
+        self.visit(ast, self.context)
 
     def visit(self, node, context: MathPyContext):
         node_name = node.__class__.__name__  # get node class name in 'str'
