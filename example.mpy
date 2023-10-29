@@ -1,7 +1,7 @@
-var a;
-var c;
-
-{
-    var b = "chill";
-    a = 2;
+function bob(a, b) {
+    a = a + 1;
+    b = b + 2;
 }
+
+var bobby_car = "RAWR";
+var c = bob(2, 3);

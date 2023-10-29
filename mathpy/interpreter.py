@@ -99,9 +99,10 @@ class MathPyInterpreter:
 
         context.set(variable_name, variable_value)
 
-    def visit_VariableAccessNode(self, node, context: MathPyContext):
+    @staticmethod
+    def visit_VariableAccessNode(node, context: MathPyContext):
         variable_name: str = node.get_name()
-        return self.context.get(variable_name)
+        return context.get(variable_name)
 
     def visit_BinaryOperationNode(self, node, context: MathPyContext):
         left_value, operator, right_value = node.get_value()
@@ -119,9 +120,26 @@ class MathPyInterpreter:
         return visits
 
     def visit_CodeBlockNode(self, node, context: MathPyContext):
-        code_block_context = MathPyContext(parent=context, load_builtins=False)
-        visits = self.visit(node.get_value(), code_block_context)  # node.get_value() is MultipleStatementsNode
-        return visits
+        code_block_context = MathPyContext(
+            parent=context, load_builtins=False, display_name=f'code block in {context.display_name}'
+        )
 
-    def visit_error(self, node, context):
+        visits = self.visit(node.get_value(), code_block_context)  # node.get_value() is MultipleStatementsNode
+        return MathPyNull()
+
+    @staticmethod
+    def visit_FunctionDefineNode(node, context: MathPyContext):
+        function = MathPyFunction(node.get_parameter_names(), node.get_body(), context, node.get_name())
+        context.declare(node.get_name(), function)
+
+    def visit_FunctionCallNode(self, node, context: MathPyContext):
+        function_name = node.get_name()
+        function: MathPyFunction = context.get(function_name)  # get function from local context
+
+        parameter_values = [self.visit(value, context) for value in node.get_parameter_values()]
+
+        function_output = function.call(*parameter_values)
+        return function_output
+
+    def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')
