@@ -148,7 +148,6 @@ class MathPyParser:
         if value is None:
             raise MathPySyntaxError("value")
 
-        self.advance()
         return VariableAssignNode(name, value)
 
     def access_variable(self) -> VariableAccessNode:
