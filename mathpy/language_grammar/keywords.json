@@ -1,3 +1,5 @@
 {
-  "var": "TT_VARIABLE_DEFINE"
+  "var":    "TT_VARIABLE_DEFINE",
+
+  "null":   "TT_NULL"
 }

@@ -1,3 +1,8 @@
+class NullTypeNode:
+    def __repr__(self) -> str:
+        return "NullTypeNode()"
+
+
 class NumberNode:
     def __init__(self, value_token):
         self.value_token = value_token

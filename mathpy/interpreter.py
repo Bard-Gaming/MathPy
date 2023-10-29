@@ -70,15 +70,21 @@ class MathPyInterpreter:
         method = getattr(self, f"visit_{node_name}", self.visit_error)
         return method(node, context)
 
-    def visit_StringNode(self, node, context: MathPyContext):
+    @staticmethod
+    def visit_StringNode(node, context: MathPyContext):
         return MathPyString(node.get_value())
 
-    def visit_NumberNode(self, node, context: MathPyContext):
+    @staticmethod
+    def visit_NumberNode(node, context: MathPyContext):
         raw_number: str = node.get_value()
         if '.' in raw_number:
             return MathPyFloat(float(raw_number))
         else:
             return MathPyInt(int(raw_number))
+
+    @staticmethod
+    def visit_NullTypeNode(node, context: MathPyContext):
+        return MathPyNull()
 
     def visit_VariableDefineNode(self, node, context: MathPyContext):
         variable_name: str = node.get_name()
@@ -100,11 +106,11 @@ class MathPyInterpreter:
 
     def visit_BinaryOperationNode(self, node, context: MathPyContext):
         left_value, operator, right_value = node.get_value()
-        left_value = self.visit(left_value, context)  # is Parser Node, turn to Custom Type
-        operator = operator.get_value()  # operator was Token, cast to 'str'
+        left_value = self.visit(left_value, context)  # is Parser Node, turn to Custom Type (ex: MathPyString)
+        operator = operator.get_value()  # operator is Token, get 'str' value
         right_value = self.visit(right_value, context)  # is Parser Node, turn to Custom Type
 
-        return eval(f"left_value {operator} right_value")
+        return eval(f"left_value {operator} right_value")  # return MathPyString(x) + MathPyInt(y) for instance
 
     def visit_MultipleStatementsNode(self, node, context: MathPyContext):
         visits: list = []
