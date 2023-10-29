@@ -12,7 +12,7 @@ def run_file(file: open) -> None:
     mp_parser = MathPyParser(tokens)
     ast = mp_parser.parse()
 
-    mp_interpreter = MathPyInterpreter(ast)
-    mp_interpreter.interpret()
+    mp_interpreter = MathPyInterpreter()
+    mp_interpreter.interpret(ast)
 
     print(mp_interpreter.context.symbol_table.table)
