@@ -1,7 +1,7 @@
 from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
-                           FunctionCallNode)
+                           FunctionCallNode, ReturnNode)
 
 
 class MathPyParser:
@@ -98,6 +98,9 @@ class MathPyParser:
 
         elif token.tt_type == 'TT_FUNCTION_DEFINE':
             return self.define_function()
+
+        elif token.tt_type == 'TT_RETURN':
+            return self.return_statement()
 
         elif token.tt_type == 'TT_NAME':
             if self.future_token is not None and self.future_token.tt_type == 'TT_EQUALS_SIGN':
@@ -231,3 +234,13 @@ class MathPyParser:
         self.advance()  # skip right parenthesis
 
         return FunctionCallNode(function_name, parameter_values)
+
+    def return_statement(self) -> ReturnNode:
+        if self.current_token.tt_type != 'TT_RETURN':
+            raise MathPySyntaxError('return', self.current_token)
+        self.advance()  # skip 'return' keyword
+
+        if self.current_token.tt_type in ('TT_NEWLINE', 'TT_RIGHT_BRACE'):
+            return ReturnNode()
+        else:
+            return ReturnNode(self.expression())

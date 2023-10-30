@@ -1,4 +1,4 @@
-from .errors import MathPyNameError
+from .errors import MathPyNameError, MathPySyntaxError
 from .types import MathPyNull, MathPyString, MathPyInt, MathPyFloat, MathPyFunction
 
 
@@ -36,10 +36,14 @@ class MathPySymbolTable:
 
 
 class MathPyContext:
-    def __init__(self, *, parent: "MathPyContext" = None, load_builtins: bool = False, display_name: str = "main"):
+    def __init__(self, *, parent: "MathPyContext" = None, top_level: bool = False, display_name: str = None):
         self.parent = parent
         self.display_name = display_name
         self.symbol_table = MathPySymbolTable() if parent is None else MathPySymbolTable(parent=parent.symbol_table)
+        self.top_level = top_level
+
+    def is_top_level(self) -> bool:
+        return self.top_level
 
     def get(self, symbol: str) -> any:
         return self.symbol_table.get(symbol)
@@ -51,7 +55,7 @@ class MathPyContext:
         return self.symbol_table.declare(symbol, value)
 
     def __str__(self) -> str:
-        return f"<context at {self.display_name !r}>"
+        return f"<context at {self.display_name}>" if self.display_name is not None else "<context>"
 
     def __repr__(self) -> str:
         return f'MathPyContext(display_name={self.display_name !r}, parent={self.parent !r})'
@@ -59,7 +63,7 @@ class MathPyContext:
 
 class MathPyInterpreter:
     def __init__(self):
-        self.context = MathPyContext(load_builtins=True)
+        self.context = MathPyContext(top_level=True, display_name="'main'")
 
     def interpret(self, ast):
         self.visit(ast, self.context)
@@ -113,19 +117,24 @@ class MathPyInterpreter:
         return eval(f"left_value {operator} right_value")  # return MathPyString(x) + MathPyInt(y) for instance
 
     def visit_MultipleStatementsNode(self, node, context: MathPyContext):
-        visits: list = []
         for value in node.get_value():
-            visits.append(self.visit(value, context))
+            if value.__class__.__name__ == 'ReturnNode':
+                if context.is_top_level():  # returns are illegal at top level
+                    raise MathPySyntaxError("Illegal 'return' statement at top level", default_message_format=False)
 
-        return visits
+                return self.visit(value, context)  # return value of ReturnNode, stop visiting further nodes
+
+            self.visit(value, context)  # if not a return, keep visiting node
+
+        return MathPyNull()
 
     def visit_CodeBlockNode(self, node, context: MathPyContext):
         code_block_context = MathPyContext(
-            parent=context, load_builtins=False, display_name=f'code block in {context.display_name}'
-        )
+            parent=context, display_name=f'code block in {context.display_name !r}', top_level=context.top_level
+        )  # inherit top level of parent (keep main if code block in main) for return statement
+        visit_output = self.visit(node.get_value(), code_block_context)  # node.get_value() is MultipleStatementsNode
 
-        visits = self.visit(node.get_value(), code_block_context)  # node.get_value() is MultipleStatementsNode
-        return MathPyNull()
+        return visit_output
 
     @staticmethod
     def visit_FunctionDefineNode(node, context: MathPyContext):
@@ -140,6 +149,14 @@ class MathPyInterpreter:
 
         function_output = function.call(*parameter_values)
         return function_output
+
+    def visit_ReturnNode(self, node, context: MathPyContext):
+        return_value = node.get_value()
+        if return_value is None:
+            return MathPyNull()
+
+        return_value = self.visit(return_value, context)
+        return return_value
 
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')

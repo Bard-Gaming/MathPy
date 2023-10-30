@@ -1,6 +1,7 @@
-function bob(a, b) {
+function bob(a,b) {
     a = a + 1;
     b = b + 2;
+    return a + b;
 }
 
 var bobby_car = "RAWR";

@@ -2,5 +2,6 @@
   "var":        "TT_VARIABLE_DEFINE",
   "function":   "TT_FUNCTION_DEFINE",
 
-  "null":       "TT_NULL"
+  "null":       "TT_NULL",
+  "return":     "TT_RETURN"
 }

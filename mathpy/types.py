@@ -212,8 +212,7 @@ class MathPyFunction:
 
         from .interpreter import MathPyContext, MathPyInterpreter
         function_context = MathPyContext(
-            parent=self.parent_context, load_builtins=False, display_name=self.function_name
-        )
+            parent=self.parent_context, display_name=f"function {self.function_name !r}")
         function_interpreter = MathPyInterpreter()
 
         # Set all values for parameters in local context

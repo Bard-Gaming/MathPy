@@ -133,3 +133,14 @@ class FunctionCallNode:
 
     def __repr__(self) -> str:
         return f'FunctionCallNode({self.function_name !r}, {self.parameter_values !r})'
+
+
+class ReturnNode:
+    def __init__(self, value = None):
+        self.value = value  # is Node
+
+    def get_value(self) -> any:
+        return self.value
+
+    def __repr__(self) -> str:
+        return f'ReturnNode({self.value})'
