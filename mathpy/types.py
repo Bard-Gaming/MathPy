@@ -1,4 +1,4 @@
-from .errors import MathPyIndexError, MathPyTypeError, MathPyValueError
+from .errors import MathPyIndexError, MathPyTypeError, MathPyValueError, MathPyAttributeError
 from math import log
 
 
@@ -118,17 +118,6 @@ class MathPyString(MathPyNumber):
 
         return "".join(reversed(text_string))  # result is reversed --> reverse reversed string for original
 
-    def reverse(self) -> "MathPyString":
-        length = len(self) - 1
-
-        return MathPyString(
-            sum(
-                ((self.value // self.base_number ** i) - (
-                        (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
-                        length - i) for i in range(length + 1)
-            )
-        )
-
     # ------- Binary Operations ------- :
     def __truediv__(self, other) -> "MathPyString":
         return self._binary_operation(other, '//')  # division = integer division for Strings
@@ -159,6 +148,30 @@ class MathPyString(MathPyNumber):
 
     def __gt__(self, other) -> bool:
         return self._logic_operation(other, '>')
+
+    # ------- Attributes (can be accessed by language) ------- :
+    def attribute_length(self) -> MathPyInt:
+        return MathPyInt(len(self))
+
+    @staticmethod
+    def attribute_error(attribute_name):
+        raise MathPyAttributeError(f'\'MathPyString\' has no attribute {attribute_name !r}')
+
+    # ------- Methods (can be called by language) ------- :
+    def method_reversed(self) -> "MathPyString":
+        length = len(self) - 1
+
+        return MathPyString(
+            sum(
+                ((self.value // self.base_number ** i) - (
+                        (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
+                        length - i) for i in range(length + 1)
+            )
+        )
+
+    @staticmethod
+    def method_error(method_name):
+        raise MathPyAttributeError(f'\'MathPyString\' has no method {method_name !r}')
 
     # ------- Miscellaneous ------- :
     def __len__(self) -> int:

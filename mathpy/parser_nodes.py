@@ -144,3 +144,37 @@ class ReturnNode:
 
     def __repr__(self) -> str:
         return f'ReturnNode({self.value})'
+
+
+class AttributeAccessNode:
+    def __init__(self, atom, attribute_name):
+        self.atom = atom  # Node
+        self.attribute_name = attribute_name  # Token
+
+    def get_atom(self):
+        return self.atom
+
+    def get_attribute_name(self):
+        return self.attribute_name.get_value()
+
+    def __repr__(self) -> str:
+        return f'AttributeAccessNode({self.atom !r}, {self.attribute_name !r})'
+
+
+class MethodCallNode:
+    def __init__(self, atom, method_name, parameter_values: list):
+        self.atom = atom  # Node
+        self.method_name = method_name  # Token
+        self.parameter_values = parameter_values  # list of nodes
+
+    def get_atom(self):
+        return self.atom
+
+    def get_method_name(self):
+        return self.method_name.get_value()
+
+    def get_parameter_values(self):
+        return self.parameter_values
+
+    def __repr__(self) -> str:
+        return f'MethodCallNode({self.atom !r}, {self.method_name !r})'

@@ -158,5 +158,26 @@ class MathPyInterpreter:
         return_value = self.visit(return_value, context)
         return return_value
 
+    def visit_AttributeAccessNode(self, node, context: MathPyContext):
+        atom = self.visit(node.get_atom(), context)
+        attribute_name = node.get_attribute_name()
+
+        attribute = getattr(atom, f'attribute_{attribute_name}', None)
+        if attribute is None:
+            atom.attribute_error(attribute_name)
+
+        return attribute()  # attribute is a method without params
+
+    def visit_MethodCallNode(self, node, context: MathPyContext):
+        atom = self.visit(node.get_atom(), context)
+        method_name = node.get_method_name()
+        parameter_list = [self.visit(param) for param in node.get_parameter_values()]
+
+        method = getattr(atom, f'method_{method_name}', None)
+        if method is None:
+            atom.method_error(method_name)
+
+        return method(*parameter_list)
+
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')

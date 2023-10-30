@@ -1,7 +1,7 @@
 from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
-                           FunctionCallNode, ReturnNode)
+                           FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode)
 
 
 class MathPyParser:
@@ -35,10 +35,23 @@ class MathPyParser:
     def parse(self) -> MultipleStatementsNode:
         return self.multiple_statements()
 
+    @staticmethod
+    def _check_attribute(fnc):
+        def wrapper(self, *args, **kwargs):
+            atom = fnc(self, *args, **kwargs)
+
+            if self.current_token.tt_type == 'TT_DOT':
+                return self.access_attribute(atom)
+
+            return atom
+
+        return wrapper
+
     # ------------------ Language Grammar ------------------ :
 
-    def atom(self, token=None):
-        token = self.current_token if token is None else token
+    @_check_attribute
+    def atom(self):
+        token = self.current_token
 
         if token.tt_type == 'TT_NAME':
             if self.future_token is not None and self.future_token.tt_type == 'TT_LEFT_PARENTHESIS':
@@ -244,3 +257,44 @@ class MathPyParser:
             return ReturnNode()
         else:
             return ReturnNode(self.expression())
+
+    def access_attribute(self, atom) -> AttributeAccessNode | MethodCallNode:
+        if self.current_token.tt_type != 'TT_DOT':
+            raise MathPySyntaxError('.', self.current_token)
+        self.advance()  # skip dot
+
+        if self.current_token.tt_type != 'TT_NAME':
+            raise MathPySyntaxError('name', self.current_token)
+        attribute_name = self.current_token
+        self.advance()  # skip name
+
+        if self.current_token.tt_type != 'TT_LEFT_PARENTHESIS':
+            return AttributeAccessNode(atom, attribute_name)
+        else:
+            return self.call_method(atom, attribute_name)
+
+    def call_method(self, atom, method_name) -> MethodCallNode:
+        if self.current_token.tt_type != 'TT_LEFT_PARENTHESIS':
+            raise MathPySyntaxError('(', self.current_token)
+        self.advance()
+
+        parameter_values = []
+
+        if self.current_token.tt_type != 'TT_RIGHT_PARENTHESIS':
+            parameter_values.append(self.expression())
+        else:
+            return MethodCallNode(atom, method_name, [])
+
+        while self.current_token.tt_type == 'TT_COMMA':
+            self.advance()
+
+            if self.current_token.tt_type != 'TT_RIGHT_PARENTHESIS':
+                parameter_values.append(self.expression())
+            else:
+                return MethodCallNode(atom, method_name, parameter_values)
+
+        if self.current_token.tt_type == 'TT_RIGHT_PARENTHESIS':
+            self.advance()
+            return MethodCallNode(atom, method_name, parameter_values)
+        else:
+            raise MathPySyntaxError(')', self.current_token)

@@ -28,3 +28,6 @@ class MathPyValueError(ValueError):
 
 class MathPyNameError(NameError):
     pass
+
+class MathPyAttributeError(AttributeError):
+    pass

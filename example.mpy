@@ -1,8 +1,9 @@
-function bob(a,b) {
+function bob(a, b) {
     a = a + 1;
     b = b + 2;
     return a + b;
 }
 
-var bobby_car = "RAWR";
+var bobby_car_1 = "RAWR";
+var bobby_car_2 = bobby_car_1.length;
 var c = bob(2, 3);
