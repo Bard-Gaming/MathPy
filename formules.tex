@@ -2,7 +2,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 
-\title{\vspace{-4cm}Représentation de châines de caractères sous forme de nombres}
+\title{\vspace{-4cm}Représentation de chaînes de caractères sous forme de nombres}
 \author{Christophe Dronne}
 \date{25 Octobre, 2023}
 
@@ -10,168 +10,117 @@
 \maketitle
 
 \section*{Préliminaires}
-On définit $b$ le nombre d'éléments de la base $\mathbb{B}$, définie avec l'ensemble
-$\{"a", "b", ..., "z", "A", "B", ..., "Z"\}$ pour une quantité quelconque de caractères possibles (ici l'alphabet en minuscule et majuscule pour simplifier).
+On définit une base quelconque, notée $b$, utilisant comme symboles les lettres de notre alphabet en plus d'autres symboles utilisées comme caractères typographiques. Cette base servira à représenter un nombre sous forme de texte, de la même manière que le nombre $(13303790)_{10}$ donne le nombre $($caffee$)_{16}$ qui pourrait être interprété comme le mot "caffée".
 
-\\\
+Une implémentation possible et simple de cette base pourrait utiliser les lettres "a", "b", "c" ... "z" pour représenter les nombres $0$, $1$, $2$, ... $25$, avec $b = 26$. Cette base va être utilisée pour illustrer des exemples, mais de manière générale tout formule et propriété va être applicable à une toute base supérieure ou égale à 2.
 
-Ainsi, pour donner un exemple plus concret, le nombre $(2)_{10}$ pourrait être représenté sous forme $\mathbb{B}$ tel: $(2)_{b}$ ou, d'une meilleure façon, $"b"_{\mathbb{B}}$. Pour rendre le tout plus compréhensible, on adoptera cette dernière notation.
-
-Conversement, la chaîne $"bonjour"_{\mathbb{B}}$ pourrait être
-représentée sous forme décimale, tel: $(50713653423)_{10}$
-
-\\\
-
-Le but du tout est de trouver les avantages/désavantages d'une représentation sous forme de nombre de chaînes de caractères en informatique. On prendra particulièrement soin de toujours indiquer la complexité des opérations, à usage exclusif du langage de programmation Python (3.11).
+Le but de cet exercice est de trouver une implémentation optimale des fonctions communes utilisées pour les chaînes de caractères en informatique avec ces nombres en base $b$.
 
 \section*{Longueur d'un nombre}
-On essaie de trouver un moyen efficace d'exprimer la longueur d'un nombre en une base quelconque (la longueur étant la quantité de chiffres dans le nombre pour une base donnée).
+Les chaînes de caractères ont toujours une longueur associée. Pour donner un exemple, la chaîne "bonjour" a une longueur de $7$, car elle est constituée de $7$ caractères. Cependant, le nombre $($bonjour$)_{b}$ n'a pas de 'longueur', donc il va falloir trouver une définition mathématique de la longueur d'un nombre. \\
 
-On note la longueur de $x_{b}$ "len$(x)$". Exemple: len$(1234_{10}) = 4$, car en base 10, le nombre $1234$ contient les chiffres $\{1; 2; 3; 4\}$, et card$(\{1; 2; 3; 4\}) = 4$.
-\\
+\noindent On pose:
 
-On pose: \\
+\begin{align*}
+\forall b \in \mathbb{N} - \{0; 1\} $, une base quelconque$
 
-$\forall b \in \mathbb{N} - \{0; 1\}$ représentant la base b de symboles l'ensemble $\mathbb{B}$
+\forall n \in \mathbb{N} $, la quantité de chiffres dans $ k
 
-$\forall x_{b} \in \mathbb{N}^{*}$ représentant le nombre $x$ sous la base $b$
+\forall k \in \mathbb{R} $, tel que $ 1 \leqslant k < b
+\end{align*} \\
 
-$\forall n \in \mathbb{N}^{*}$, tel que $n =$ len$(x_{b}) - 1$
+\noindent Tout entier naturel $l$ (exclu de 0) de base $b$ peut s'écrire tel:
 
-$x = \varepsilon \times b^{n}$ \\
+$l = k \times b^{n - 1}$ \\
+
+\noindent Exemple:
+
+$534 = 5.34 \times 10^{3 - 1}$, avec $b = 10$, $n = 3$, $l = 534$, $k = 5.34$,
+
+suivant les conditions posées.
 
 \newpage
 
-On sait que: \\
-
-
-$\bullet$  $1 \leqslant \varepsilon < b$, car $n$ est  l'exposant de l'ordre de grandeur de $x_{b}$, \\
-et $1 \leqslant \frac{x_{b}}{b^{n}} \leqslant b$
-
-$\bullet$  $1$; $\varepsilon$; $b$ sont positifs d'après leur définition. \\
-
-
-\begin{align*}
-1 \leqslant \varepsilon < b
-
-\Rightarrow log_{b}(1) \leqslant  log_{b}(\varepsilon) < log_{b}(b)
-
-\Rightarrow 0 \leqslant log_{b}(\varepsilon) < 1
-
-\Rightarrow  E \left( log_{b} \left( \varepsilon \right) \right) = 0
-\end{align*} \\
-
-Continuant:
-
-\begin{align*}
-x = \varepsilon \times b^{n}
-
-\Rightarrow log_{b} \left( x \right) = log_{b} \left( \varepsilon \times b^{n} \right)
-
-\Rightarrow log_{b} \left( x \right) = log_{b} \left( \varepsilon \right) +
-log_{b} \left( b^{n} \right)
-
-\Rightarrow log_{b} \left( x \right) = log_{b} \left( \varepsilon \right) + n
-
-\Rightarrow E \left( log_{b} \left( x \right) \right) = E \left( log_{b} \left( \varepsilon \right) + n \right)
-
-Or, $n$ est un entier, donc: $n = E \left( n \right)$
-
-\Rightarrow E \left( log_{b} \left( x \right) \right) = E \left( log_{b} \left( \varepsilon \right) \right) + n
-
-Comme démontré auparavant, on a: $E \left( log_{b} \left( \varepsilon \right) \right) = 0$, donc:
-
-\Rightarrow E \left( log_{b} \left( x \right) \right) = n
-\end{align*} \\\
-
-Donc, pour calculer la longueur d'une chaîne de caractères composé d'un nombre représenté en n'importe quelle base, on a:
+\noindent On pose la formule de la 'longueur' (c-à-d quantité de chiffres) d'un nombre:
 
 \begin{equation}
-len \left( x \right) = E \left( log_{b} \left( x \right) \right)
+n = E \left( log_{b} \left( l \right) \right) + 1
 \end{equation}
+
+\noindent avec $E(x)$ la fonction de la partie entière. \\
+
+\noindent Par convénience, on va noter la fonction qui attribue à un entier naturel non nul sa quantité de chiffres $len(l)$, tel que:
+
+\begin{equation}
+len(l) = E \left( log_{b} \left( l \right) \right) + 1
+\end{equation}
+
+\noindent Démonstration:
+
+On pose:
+
+\begin{align*}
+\forall b \in \mathbb{N} - \{0; 1\} $, une base quelconque$
+
+\forall n \in \mathbb{N} $, la quantité de chiffres dans $ k
+
+\forall k \in \mathbb{R} $, tel que $1 \leqslant k < b
+\end{align*} \\
+
+On a:
+
+\begin{align*}
+1 \leqslant k < b
+
+$k$ et $b$ sont positifs, donc:
+
+\Rightarrow log_{b} \left( 1 \right) \leqslant log_{b} \left( k \right) < log_{b} \left( b \right)
+
+\Rightarrow 0 \leqslant log_{b} \left( k \right) < 1
+
+\Rightarrow E \left( \log_{b} \left( k \right) \right) = 0
+\end{align*} \\
+
+On reprend la formule de $l$:
+
+\begin{align*}
+$l = k \times b^{n - 1}$
+
+\Rightarrow log_{b} \left( l \right) = log_{b} \left( k \times b^{n - 1} \right)
+
+\Rightarrow E \left( log_{b} \left( l \right) \right) =
+E \left( log_{b} \left( k \times b^{n - 1} \right) \right)
+
+\Rightarrow E \left( log_{b} \left( l \right) \right) =
+E \left( log_{b} \left( k \right) + log_{b} \left( b^{n-1} \right) \right)
+
+\Rightarrow  E \left( log_{b} \left( l \right) \right) =
+E \left( log_{b} \left( k \right) + n - 1 \right)
+\end{align*} \\
+
+$(n - 1) \in \mathbb{N}$, et un entier naturel + un autre entier naturel $\in \mathbb{N}$,
+
+donc $\forall x \in \mathbb{R}$, $E \left( x + n \right) = E \left( x \right) + n$,
+donc: \\
+
+\begin{align*}
+\Rightarrow  E \left( log_{b} \left( l \right) \right) =
+E \left( log_{b} \left( k \right) \right) + n - 1
+
+\Rightarrow  E \left( log_{b} \left( l \right) \right) + 1 =
+E \left( log_{b} \left( k \right) \right) + n
+
+or, on sait que $E \left( log_{b} \left( k \right) \right) = 0$, donc:
+
+\Rightarrow  E \left( log_{b} \left( l \right) \right) + 1 = 0 + n
+\end{align*} \\
+
+On retrouve bien:
+
+$n = E \left( log_{b} \left( l \right) \right) + 1$
 
 \newpage
 
 \section*{Indice d'un nombre}
-On essaie de simuler la fonctionalité d'indices présents dans les chaînes de caractères en Python. \\
-
-$\forall b \in \mathbb{N} - \{0; 1\}$ représentant le nombre d'éléments dans
-$\mathbb{B}$
-
-$\forall x \in \mathbb{N}^{*}$ représenté sous forme $\mathbb{B}$
-
-$\forall n \in \mathbb{N}$, tel que $n <$ la quantité de chiffres dans $x_{\mathbb{B}}$
-
-\\
-
-On note $x_{\mathbb{B}}[n]$ le chiffre dans $x$ sous forme $\mathbb{B}$ d'indice $n$ partant de la droite.
-
-Ainsi, pour $x = "bonjour"_{\mathbb{B}}$,
-on a: $x[0] = "r"_{\mathbb{B}}$ ($0$ étant la place des unités) et $x[2] = "o"_{\mathbb{B}}$.
-
-De plus, on note $E(x)$ la fonction de la partie entière, tel que $E(3,14) = 3$.
-
-On pose: \\
-\begin{equation}
-x_{\mathbb{B}}[n] = E \left(\frac{x - E \left(\frac{x}{b^{n + 1}} \right) \times b^{n + 1}}{b^{n}} \right)
-\end{equation}
-
-
-Prenons $x = 4321$ et $b = 10$ (donc le système décimal).
-
-
-On essaie d'extraire tous les chiffres dans $(x)_{b}$.
-
-\begin{equation}
-x[3] = 4 \Leftrightarrow x[3] = E \left( \frac{4321}{1000} \right) \Leftrightarrow
-x[3] = E \left( \frac{4321}{10^{3}} \right)
-\end{equation}
-
-On remarque que $b = 10$ et $n = 3$ pour $x[3]$, donc $10^{3} = b^{n}$. On note:
-\begin{equation}
-x[3] = E \left( \frac{4321}{b^n} \right) = E \left( \frac{x - 0}{b^n} \right)
-\end{equation}
-
-On continue pour n = 2:
-\begin{equation}
-x[2] = 3
-\end{equation}
-
-Or, $43 - 40 = 3$, soit $\frac{4321 - 4000}{100} = 3,21$, donc:
-
-\begin{equation}
-x[2] = E \left( \frac{4321 - 4000}{100} \right) = 3
-\end{equation}
-À nouveau, on constate qu'on a:
-$n = 2$ \\\
-$b = 10$ \\\
-$100 = 10^2 = b^{n}$ \\\
-et \\\
-\begin{equation}
-4000 = E \left( \frac{4321}{1000} \right) \times 1000 = E \left( \frac{x}{b^{n+1}} \right) \times b^{n+1}
-\end{equation}
-
-Finalement, on peut noter $x[2]$, tel:
-\begin{equation}
-x[2] = E \left( \frac{x - E \left( \frac{x}{b^{n+1}} \right) \times b^{n+1}}{b^{n}} \right)
-\end{equation}
-
-On retrouve la formule posée, et on remarque que pour $n = 3$ (premier cas, voir haut de la page), on a:
-
-\begin{equation}
-E \left( \frac{x}{b^{n+1}} \right) \times b^{n+1} = E \left( \frac{4321}{10000} \right) \times 10000 = 0
-\end{equation}
-
-Donc la formule peut aussi être utilisée pour $x[3]$.
-
-\section*{Indice d'un nombre en Python}
-Afin de uniformiser la notation d'indice de chaîne de caractères avec celle de l'informatique, on pose: \\
-$\forall x \in \mathbb{N}^{*}$ en base $\mathbb{B}$ \\
-$i \in \mathbb{N}$, l'indice d'un chiffre dans $x_\mathbb{B}$ partant de la gauche (et non la droite comme pour $n$) \\
-$l \in \mathbb{N}^{*}$ la quantité de chiffres dans $x_\mathbb{B}$. \\
-
-
-Ainsi, on a: \\
-$i = l - n$; ou, pour adopter une notation de Python: $i = $ len$(x) - n$
 
 \end{document}
