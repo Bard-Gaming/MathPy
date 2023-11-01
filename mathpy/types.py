@@ -2,12 +2,34 @@ from .errors import MathPyIndexError, MathPyTypeError, MathPyValueError, MathPyA
 from math import log
 
 
-class MathPyNull:
+class MathPyObject:
+    # --------- Attributes --------- :
+    def attribute_error(self, attribute_name):
+        raise MathPyAttributeError(f'{self.__class__.__name__ !r} has no attribute {attribute_name !r}')
+
+    # --------- Methods --------- :
+    def method_error(self, method_name):
+        raise MathPyAttributeError(f'{self.__class__.__name__ !r} has no method {method_name !r}')
+
+    # --------- Miscellaneous --------- :
     def __repr__(self) -> str:
-        return 'MathPyNull()'
+        return "MathPyObject()"
 
 
-class MathPyNumber:
+class MathPyNull(MathPyObject):
+    def __repr__(self) -> str:
+        return "MathPyNull()"
+
+
+class MathPyBool(MathPyObject):
+    def __init__(self, value):
+        self.value = bool(value)
+
+    def __repr__(self) -> str:
+        return f"MathPyBool({self.value})"
+
+
+class MathPyNumber(MathPyObject):
     def __init__(self, value: int | float):  # To be called before self.accepted_values is changed
         self.accepted_operations = (MathPyFloat, MathPyInt, MathPyString)
         self.value = value
@@ -50,6 +72,30 @@ class MathPyNumber:
 
     def __sub__(self, other):
         return self._binary_operation(other, '-')
+
+    # ------- Logic Operations ------- :
+    def _logic_operation(self, other, operator: str) -> MathPyBool:
+        if isinstance(other, (MathPyString, MathPyInt, MathPyFloat)):
+            return MathPyBool(eval(f'self.value {operator} other.value'))
+
+        else:
+            raise MathPyTypeError(
+                f'Invalid operand types for {operator !r}: \'{self.__class__.__name__}\' and {type(other).__name__ !r}')
+
+    def __lt__(self, other) -> MathPyBool:
+        return self._logic_operation(other, '<')
+
+    def __le__(self, other) -> MathPyBool:
+        return self._logic_operation(other, '<=')
+
+    def __eq__(self, other) -> MathPyBool:
+        return self._logic_operation(other, '==')
+
+    def __ge__(self, other) -> MathPyBool:
+        return self._logic_operation(other, '>=')
+
+    def __gt__(self, other) -> MathPyBool:
+        return self._logic_operation(other, '>')
 
     # ------- Miscellaneous ------- :
     def __repr__(self) -> str:
@@ -122,42 +168,11 @@ class MathPyString(MathPyNumber):
     def __truediv__(self, other) -> "MathPyString":
         return self._binary_operation(other, '//')  # division = integer division for Strings
 
-    # ------- Logic Operations ------- :
-    def _logic_operation(self, other, operator: str) -> bool:
-        if isinstance(other, int):  # TODO: Change int to MathPyInt
-            return eval(f'self.value {operator} other')
-
-        elif isinstance(other, MathPyString):
-            return eval(f'self.value {operator} other.value')
-
-        else:
-            raise MathPyTypeError(
-                f'Invalid operand types for {operator !r}: \'MathPyString\' and {type(other).__name__ !r}')
-
-    def __lt__(self, other) -> bool:
-        return self._logic_operation(other, '<')
-
-    def __le__(self, other) -> bool:
-        return self._logic_operation(other, '<=')
-
-    def __eq__(self, other) -> bool:
-        return self._logic_operation(other, '==')
-
-    def __ge__(self, other) -> bool:
-        return self._logic_operation(other, '>=')
-
-    def __gt__(self, other) -> bool:
-        return self._logic_operation(other, '>')
-
-    # ------- Attributes (can be accessed by language) ------- :
+    # --------- Attributes --------- :
     def attribute_length(self) -> MathPyInt:
         return MathPyInt(len(self))
 
-    @staticmethod
-    def attribute_error(attribute_name):
-        raise MathPyAttributeError(f'\'MathPyString\' has no attribute {attribute_name !r}')
-
-    # ------- Methods (can be called by language) ------- :
+    # --------- Methods --------- :
     def method_reversed(self) -> "MathPyString":
         length = len(self) - 1
 
@@ -168,10 +183,6 @@ class MathPyString(MathPyNumber):
                         length - i) for i in range(length + 1)
             )
         )
-
-    @staticmethod
-    def method_error(method_name):
-        raise MathPyAttributeError(f'\'MathPyString\' has no method {method_name !r}')
 
     # ------- Miscellaneous ------- :
     def __len__(self) -> int:
@@ -192,27 +203,20 @@ class MathPyString(MathPyNumber):
         return MathPyString((self.value - first_isolation) // self.base_number ** index)
 
     def __contains__(self, char) -> bool:
-        if isinstance(char, (str, MathPyString)):
+        if isinstance(char, (MathPyInt, MathPyString)):
             if len(char) > 1:
                 raise MathPyValueError(f'Char must be \'MathPyString\' of length 1')
 
             raise NotImplementedError('Optimized way still yet to be found')
 
-        elif isinstance(char, int):  # TODO: Change int to MathPyInt
-            if char >= self.base_number:
-                raise MathPyValueError(f'Char must have a value between 0 and {self.base_number - 1}')
-
-            raise NotImplementedError('Optimized way still yet to be found')
-
-        else:
-            raise MathPyTypeError(
-                f'\'in {self !s}\' requires \'MathPyString\' or \'MathPyInt\' as left operand, not {type(char).__name__ !r}')
-
     def __str__(self) -> str:
         return self.string_from_value(self.value)
 
+    def __repr__(self) -> str:
+        return f"MathPyString({self.value})"
 
-class MathPyFunction:
+
+class MathPyFunction(MathPyObject):
     def __init__(self, parameter_names: list, body, parent_context, function_name: str = None):
         self.parameter_names = parameter_names
         self.body = body
@@ -221,7 +225,8 @@ class MathPyFunction:
 
     def call(self, *args):
         if len(args) != len(self.parameter_names):
-            raise MathPyTypeError(f'{self.function_name}() takes {len(self.parameter_names)} arguments, {len(args)} given.')
+            raise MathPyTypeError(
+                f'{self.function_name}() takes {len(self.parameter_names)} arguments, {len(args)} given.')
 
         from .interpreter import MathPyContext, MathPyInterpreter
         function_context = MathPyContext(
@@ -237,5 +242,12 @@ class MathPyFunction:
         function_output = function_interpreter.visit(self.body, function_context)
         return function_output
 
+    # --------- Attributes --------- :
+    def attribute_name(self):
+        return MathPyString(self.function_name)
+
+    # --------- Methods --------- :
+
+    # --------- Miscellaneous --------- :
     def __repr__(self) -> str:
         return f'MathPyFunction({self.parameter_names !r}, {self.body !r}, {self.parent_context !r}, {self.function_name !r})'
