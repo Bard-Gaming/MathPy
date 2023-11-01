@@ -1,7 +1,7 @@
 from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
-                           FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode)
+                           FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode, BooleanNode)
 
 
 class MathPyParser:
@@ -70,6 +70,10 @@ class MathPyParser:
         elif token.tt_type == 'TT_NULL':
             self.advance()
             return NullTypeNode()
+
+        elif token.tt_type == 'TT_BOOLEAN':
+            self.advance()
+            return BooleanNode(token)
 
         elif token.tt_type == 'TT_LEFT_PARENTHESIS':
             self.advance()  # skip left parenthesis

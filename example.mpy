@@ -4,6 +4,5 @@ function bob(a, b) {
     return a + b;
 }
 
-var bobby_car_1 = "RAWR";
-var bobby_car_2 = bobby_car_1.length;
-var c = bob(2, 3);
+var bobby_car_1 = bob(2, "hello");
+var test = false;

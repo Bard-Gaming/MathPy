@@ -23,7 +23,10 @@ class MathPyNull(MathPyObject):
 
 class MathPyBool(MathPyObject):
     def __init__(self, value):
-        self.value = bool(value)
+        if not isinstance(value, bool):
+            raise MathPyValueError('MathPyBool value must be \'bool\'')
+
+        self.value = value
 
     def __repr__(self) -> str:
         return f"MathPyBool({self.value})"

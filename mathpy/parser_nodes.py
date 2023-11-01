@@ -3,6 +3,17 @@ class NullTypeNode:
         return "NullTypeNode()"
 
 
+class BooleanNode:
+    def __init__(self, value):
+        self.value = value  # is Token, token value is either "true" or "false"
+
+    def get_value(self) -> bool:
+        return self.value.get_value() == 'true'
+
+    def __repr__(self) -> str:
+        return f'BooleanNode({self.value})'
+
+
 class NumberNode:
     def __init__(self, value_token):
         self.value_token = value_token
@@ -136,7 +147,7 @@ class FunctionCallNode:
 
 
 class ReturnNode:
-    def __init__(self, value = None):
+    def __init__(self, value=None):
         self.value = value  # is Node
 
     def get_value(self) -> any:

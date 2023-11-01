@@ -3,5 +3,8 @@
   "function":   "TT_FUNCTION_DEFINE",
 
   "null":       "TT_NULL",
+  "true":       "TT_BOOLEAN",
+  "false":      "TT_BOOLEAN",
+
   "return":     "TT_RETURN"
 }

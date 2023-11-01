@@ -1,5 +1,5 @@
 from .errors import MathPyNameError, MathPySyntaxError
-from .types import MathPyNull, MathPyString, MathPyInt, MathPyFloat, MathPyFunction
+from .types import MathPyNull, MathPyBool, MathPyString, MathPyInt, MathPyFloat, MathPyFunction
 
 
 class MathPySymbolTable:
@@ -88,6 +88,10 @@ class MathPyInterpreter:
     @staticmethod
     def visit_NullTypeNode(node, context: MathPyContext):
         return MathPyNull()
+
+    @staticmethod
+    def visit_BooleanNode(node, context: MathPyContext):
+        return MathPyBool(node.get_value())
 
     def visit_VariableDefineNode(self, node, context: MathPyContext):
         variable_name: str = node.get_name()
