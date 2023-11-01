@@ -12,11 +12,17 @@ class MathPyObject:
         raise MathPyAttributeError(f'{self.__class__.__name__ !r} has no method {method_name !r}')
 
     # --------- Miscellaneous --------- :
+    def __int__(self):
+        raise MathPyValueError(f"Can't turn {self.__class__.__name__ !r} to integer")
+
     def __repr__(self) -> str:
         return "MathPyObject()"
 
 
 class MathPyNull(MathPyObject):
+    def __int__(self) -> int:
+        return 0
+
     def __str__(self) -> str:
         return "null"
 
@@ -30,6 +36,9 @@ class MathPyBool(MathPyObject):
             raise MathPyValueError('MathPyBool value must be \'bool\'')
 
         self.value = value
+
+    def __int__(self) -> int:
+        return 1 * self.value  # 1 * False = 0; 1 * True = 1
 
     def __str__(self) -> str:
         return str(self.value).lower()
@@ -122,6 +131,14 @@ class MathPyInt(MathPyNumber):
         super().__init__(value)  # cast to 'int' in case it's a float
         self.accepted_operations = (MathPyInt, MathPyFloat, MathPyString)
 
+    # --------- Methods --------- :
+    def method_to_str(self) -> "MathPyString":
+        return MathPyString(self.value)
+
+    # --------- Miscellaneous --------- :
+    def __int__(self) -> int:
+        return self.value
+
 
 class MathPyFloat(MathPyNumber):
     def __init__(self, value):
@@ -130,6 +147,9 @@ class MathPyFloat(MathPyNumber):
 
         super().__init__(value)
         self.accepted_operations = (MathPyFloat, MathPyInt)
+
+    def __int__(self) -> int:
+        return int(self.value)
 
 
 class MathPyString(MathPyNumber):
@@ -184,7 +204,13 @@ class MathPyString(MathPyNumber):
     def attribute_length(self) -> MathPyInt:
         return MathPyInt(len(self))
 
+    def attribute_value(self) -> MathPyInt:
+        return MathPyInt(self.value)
+
     # --------- Methods --------- :
+    def method_to_int(self) -> MathPyInt:
+        return MathPyInt(self.value)
+
     def method_reversed(self) -> "MathPyString":
         length = len(self) - 1
 
@@ -220,6 +246,9 @@ class MathPyString(MathPyNumber):
                 raise MathPyValueError(f'Char must be \'MathPyString\' of length 1')
 
             raise NotImplementedError('Optimized way still yet to be found')
+
+    def __int__(self):
+        return self.value
 
     def __str__(self) -> str:
         return repr(self.string_from_value(self.value))  # call repr for quotation marks

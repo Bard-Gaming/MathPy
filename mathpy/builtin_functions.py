@@ -25,22 +25,24 @@ def builtin_function_log(value):
     print(value)
     return MathPyNull()
 
-def builtin_function_str(value):
-    if isinstance(value, MathPyString):
-        return value
-    elif isinstance(value, MathPyInt):
-        return MathPyString(value.value)
 
+def builtin_function_str(value):
     return MathPyString(str(value))
+
+
+def builtin_function_int(value):
+    return MathPyInt(int(value))
 
 
 builtin_function_parameters = {
     "builtin_function_log": 1,
     "builtin_function_str": 1,
+    "builtin_function_int": 1,
 }
 
 builtins_list = (
     builtin_function_log, builtin_function_str,
+    builtin_function_int,
 )
 
 builtin_functions = {
