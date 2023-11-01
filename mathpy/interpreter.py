@@ -42,6 +42,15 @@ class MathPyContext:
         self.symbol_table = MathPySymbolTable() if parent is None else MathPySymbolTable(parent=parent.symbol_table)
         self.top_level = top_level
 
+        if top_level is True:
+            from .builtin_functions import builtin_functions, bind
+            for fnc_name, fnc in builtin_functions.items():
+                mathpy_function = MathPyFunction([], "", self, fnc_name)
+
+                bind(mathpy_function, fnc, "call")  # set mathpy.call() to fnc() (need to bind to instance)
+
+                self.declare(fnc_name, mathpy_function)
+
     def is_top_level(self) -> bool:
         return self.top_level
 

@@ -6,3 +6,5 @@ function bob(a, b) {
 
 var bobby_car_1 = bob(2, "hello");
 var test = false;
+
+log(test);

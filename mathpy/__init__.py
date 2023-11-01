@@ -14,5 +14,3 @@ def run_file(file: open) -> None:
 
     mp_interpreter = MathPyInterpreter()
     mp_interpreter.interpret(ast)
-
-    print(mp_interpreter.context.symbol_table.table)
