@@ -17,6 +17,9 @@ class MathPyObject:
 
 
 class MathPyNull(MathPyObject):
+    def __str__(self) -> str:
+        return "null"
+
     def __repr__(self) -> str:
         return "MathPyNull()"
 
@@ -27,6 +30,9 @@ class MathPyBool(MathPyObject):
             raise MathPyValueError('MathPyBool value must be \'bool\'')
 
         self.value = value
+
+    def __str__(self) -> str:
+        return str(self.value).lower()
 
     def __repr__(self) -> str:
         return f"MathPyBool({self.value})"
@@ -101,6 +107,9 @@ class MathPyNumber(MathPyObject):
         return self._logic_operation(other, '>')
 
     # ------- Miscellaneous ------- :
+    def __str__(self) -> str:
+        return str(self.value)
+
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}({self.value})'
 
@@ -213,7 +222,7 @@ class MathPyString(MathPyNumber):
             raise NotImplementedError('Optimized way still yet to be found')
 
     def __str__(self) -> str:
-        return self.string_from_value(self.value)
+        return repr(self.string_from_value(self.value))  # call repr for quotation marks
 
     def __repr__(self) -> str:
         return f"MathPyString({self.value})"
@@ -252,5 +261,8 @@ class MathPyFunction(MathPyObject):
     # --------- Methods --------- :
 
     # --------- Miscellaneous --------- :
+    def __str__(self) -> str:
+        return f"<function {self.function_name !r}>"
+
     def __repr__(self) -> str:
         return f'MathPyFunction({self.parameter_names !r}, {self.body !r}, {self.parent_context !r}, {self.function_name !r})'

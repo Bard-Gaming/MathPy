@@ -4,7 +4,9 @@ function bob(a, b) {
     return a + b;
 }
 
-var bobby_car_1 = bob(2, "hello");
-var test = false;
+var bobby_car = bob(2, "hello");
+var test = bobby_car.length;
 
+log(bobby_car);
 log(test);
+log(bob);
