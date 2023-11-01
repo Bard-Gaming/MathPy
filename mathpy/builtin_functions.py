@@ -1,4 +1,4 @@
-from .types import MathPyNull
+from .types import MathPyString, MathPyInt, MathPyNull
 from .errors import MathPyTypeError
 
 
@@ -25,11 +25,25 @@ def builtin_function_log(value):
     print(value)
     return MathPyNull()
 
+def builtin_function_str(value):
+    if isinstance(value, MathPyString):
+        return value
+    elif isinstance(value, MathPyInt):
+        return MathPyString(value.value)
+
+    return MathPyString(str(value))
+
 
 builtin_function_parameters = {
     "builtin_function_log": 1,
+    "builtin_function_str": 1,
 }
 
+builtins_list = (
+    builtin_function_log, builtin_function_str,
+)
+
 builtin_functions = {
-    "log": function_wrapper(builtin_function_log),
+    fnc.__name__[17:]: function_wrapper(fnc)
+    for fnc in builtins_list
 }
