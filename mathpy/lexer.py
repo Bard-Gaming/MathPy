@@ -88,6 +88,10 @@ class MathPyLexer:
 
         return Token(number_string, 'TT_NUMBER', line_start, column_start)
 
+    def make_comment(self) -> None:
+        while self.current_char != '\n':
+            self.advance()
+
     # -------------------------- Tokenize process --------------------------
 
     def default_tokenize_treatment(self, token_list: list, token_type: str) -> None:
@@ -101,6 +105,7 @@ class MathPyLexer:
             "TT_NAME": lambda: token_list.append(self.make_name()),
             "TT_QUOTE": lambda: token_list.append(self.make_string()),
             "TT_DIGIT": lambda: token_list.append(self.make_number()),
+            "TT_COMMENT": lambda: self.make_comment()
         }
 
         while self.current_char is not None:

@@ -7,4 +7,4 @@ function bob(a, b) {
 var bobby_car = bob(2, "hello");
 var test = bobby_car.length;
 
-log(str(526548.0));
+# log(bobby_car.length.to_str());

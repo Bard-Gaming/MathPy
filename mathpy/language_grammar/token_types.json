@@ -16,6 +16,8 @@
 
   "TT_QUOTE":             ["\"", "'"],
 
+  "TT_COMMENT":           ["#"],
+
   "TT_NAME":              "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_",
   "_TT_NAME_EXTENSION":   "-0123456789",
 
