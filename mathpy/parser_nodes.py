@@ -188,4 +188,4 @@ class MethodCallNode:
         return self.parameter_values
 
     def __repr__(self) -> str:
-        return f'MethodCallNode({self.atom !r}, {self.method_name !r})'
+        return f'MethodCallNode({self.atom !r}, {self.method_name !r}, {self.parameter_values !r})'

@@ -224,11 +224,7 @@ class MathPyString(MathPyNumber):
         length = len(self) - 1
 
         return MathPyString(
-            sum(
-                ((self.value // self.base_number ** i) - (
-                        (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
-                        length - i) for i in range(length + 1)
-            )
+            sum(((self.value // self.base_number ** i) - ((self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (length - i) for i in range(length + 1))
         )
 
     # ------- Miscellaneous ------- :
@@ -257,7 +253,10 @@ class MathPyString(MathPyNumber):
             raise NotImplementedError('Optimized way still yet to be found')
 
     def __int__(self):
-        return self.value
+        try:
+            return int(str(self))
+        except ValueError:
+            raise MathPyValueError(f"Couldn't get 'int' value for {self}")
 
     def __str__(self) -> str:
         return repr(self.string_from_value(self.value))  # call repr for quotation marks
