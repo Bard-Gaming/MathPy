@@ -14,7 +14,94 @@ On définit une base quelconque, notée $b$, utilisant comme symboles les lettre
 
 Une implémentation possible et simple de cette base pourrait utiliser les lettres "a", "b", "c" ... "z" pour représenter les nombres $0$, $1$, $2$, ... $25$, avec $b = 26$. Cette base va être utilisée pour illustrer des exemples, mais de manière générale tout formule et propriété va être applicable à une toute base supérieure ou égale à 2.
 
-Le but de cet exercice est de trouver une implémentation optimale des fonctions communes utilisées pour les chaînes de caractères en informatique avec ces nombres en base $b$.
+Le but de cet exercice est de trouver une implémentation optimale des fonctions communes utilisées pour les chaînes de caractères en informatique avec ces nombres en base $b$. \\
+
+\noindent Lors de cet exercice, on va souvent faire utilisation de la fonction de la partie entière, notée $E(x)$, et de la fonction de la partie fractionnaire, notée
+$frac(x)$, tel: \\
+
+$\forall x \in \mathbb{R}$, on a:
+
+\begin{equation}
+E \left( x \right) \in \mathbb{N}
+\end{equation}
+
+\begin{equation}
+frac \left( x \right) = | x | - E \left( | x | \right)
+\end{equation} \\
+
+Or, on prendra seulement en compte des valeurs positives, donc:
+
+\begin{equation}
+frac \left( x \right) = x - E \left( x \right)
+\end{equation}
+
+\newpage
+
+\noindent On a les propriétés suivantes:
+
+\begin{align*}
+0 \leqslant frac \left( x \right) < 1
+
+\Rightarrow E \left( frac \left( x \right) \right) = 0
+\end{align*} \\ \\
+
+\begin{align*}
+0 \leqslant x < 1
+
+\Rightarrow frac \left( x \right) = x
+
+\Rightarrow E \left( x \right) = E \left( frac \left( x \right) \right) = 0
+\end{align*} \\ \\
+
+\begin{align*}
+$frac$ \left( frac \left( x \right) \right) = frac \left( x \right) -
+E \left( frac \left( x \right) \right)
+
+\Rightarrow frac \left( frac \left( x \right) \right) =
+frac \left( x \right) - 0
+
+\Rightarrow frac \left( frac \left( x \right) \right) = frac \left( x \right)
+\end{align*} \\ \\
+
+$\forall \left( x_{1}; x_{2} \right) \in \mathbb{R}^{2}$, on a:
+
+\begin{align*}
+$E$ \left( x_{1} + x_{2} \right) = E \left( x_{1} \left) + E \left( x_{2} \right)
+
+si, et seulement si:
+
+0 \leqslant frac \left( x_{1} \right) + frac \left( x_{2} \right) < 1
+
+sinon:
+
+$E$ \left( x_{1} + x_{2} \right) = E \left( x_{1} \left) + E \left( x_{2} \right) + 1
+\end{align*} \\ \\
+
+Donc, $\forall x \in \mathbb{R}, \forall n \in \mathbb{N}$, on a:
+
+\begin{align*}
+$E$ \left( x + n \right) = E \left( x \right) + n
+
+car:
+
+$frac$ \left( x \right) + frac \left( n \right) =
+frac \left( x \right) + 0 = frac \left( x \right)
+
+et
+
+0 \leqslant frac \left( x \right) < 1
+
+Donc $E$ \left( x + n \right) = E \left( x \right) + E \left( n \right)
+
+De plus, on a:
+E \left( n \right) = n$, donc$
+
+$E$ \left( x + n \right) $ est bien égal à $  E \left( x \right) + n
+
+
+\end{align*}
+
+\newpage
 
 \section*{Longueur d'un nombre}
 Les chaînes de caractères ont toujours une longueur associée. Pour donner un exemple, la chaîne "bonjour" a une longueur de $7$, car elle est constituée de $7$ caractères. Cependant, le nombre $($bonjour$)_{b}$ n'a pas de 'longueur', donc il va falloir trouver une définition mathématique de la longueur d'un nombre. \\
@@ -39,15 +126,11 @@ $534 = 5.34 \times 10^{3 - 1}$, avec $b = 10$, $n = 3$, $l = 534$, $k = 5.34$,
 
 suivant les conditions posées.
 
-\newpage
-
 \noindent On pose la formule de la 'longueur' (c-à-d quantité de chiffres) d'un nombre:
 
 \begin{equation}
 n = E \left( log_{b} \left( l \right) \right) + 1
 \end{equation}
-
-\noindent avec $E(x)$ la fonction de la partie entière. \\
 
 \noindent Par convénience, on va noter la fonction qui attribue à un entier naturel non nul sa quantité de chiffres $len(l)$, tel que:
 
@@ -79,7 +162,9 @@ $k$ et $b$ sont positifs, donc:
 \Rightarrow 0 \leqslant log_{b} \left( k \right) < 1
 
 \Rightarrow E \left( \log_{b} \left( k \right) \right) = 0
-\end{align*} \\
+\end{align*}
+
+\newpage
 
 On reprend la formule de $l$:
 
@@ -120,26 +205,42 @@ On retrouve bien:
 
 $n = E \left( log_{b} \left( l \right) \right) + 1$
 
-\newpage
+\noindent On a donc vérifié l'équation et justifié la validité de la fonction $len(l)$. \\
 
 \noindent Exemple:
 
+On reprend la base $b = 26$ définie dans les préliminaires:
+
 \begin{align*}
-$l = ($bonjour$)_{25} = (481363913)_{10}$
+$l = ($bonjour$)_{26} = (481363913)_{10}$
 
-$len$ \left( l \right) = E \left( log_{25} \left( l \right) \right) + 1
+$len$ \left( l \right) = E \left( log_{26} \left( l \right) \right) + 1
 
-$log$_{25} \left( l \right) \approx 6.2109056
+$log$_{26} \left( l \right) \approx 6.1361
 
-E \left( log_{25} \left( l \right) \right) = 6
+E \left( log_{26} \left( l \right) \right) = 6
 
-$len$ \left( l \right) = E \left( log_{25} \left( l \right) \right) + 1 = 7
+$len$ \left( l \right) = E \left( log_{26} \left( l \right) \right) + 1 = 6 + 1
 
 $len$ \left( l \right) = 7
 \end{align*} \\
 
-En comptant la quantité de chiffres dans $($bonjour$)_{25}$, on retrouve bien $7$.
+En comptant la quantité de chiffres dans $($bonjour$)_{26}$, on retrouve bien $7$.
+
+\newpage
 
 \section*{Indice d'un nombre}
+On s'intéresse à trouver le chiffre d'indice $n \in \mathbb{N}$ d'un entier naturel quelconque $l$ représenté en base quelconque $b$. On note la fonction qui permet de trouver ce chiffre $ind(l; n)$. \\
+
+\noindent On pose:
+
+\begin{equation}
+ind(l;n) = E \left(
+\frac{l - E \left( \frac{l}{b^{n + 1}} \right) \times b^{n + 1} }{b^{n}}
+\right)
+\end{equation}
+
+On note que il s'agit de l'indice \textbf{partant de la droite} à $n = 0$. Pour avoir le chiffre d'indice $n$ \textbf{partant de la gauche}, il suffit de prendre $len(l) - n$ comme indice, soit $ind \left( l; len(l) - n \right)$, ce qui permet de suivre les conventions informatiques.
+
 
 \end{document}
