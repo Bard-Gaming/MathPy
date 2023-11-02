@@ -242,8 +242,10 @@ class MathPyString(MathPyNumber):
 
         index = (length - 1) - index
 
-        first_isolation = (self.value // self.base_number ** (index + 1)) * self.base_number ** (index + 1)
-        return MathPyString((self.value - first_isolation) // self.base_number ** index)
+        first_term = self.value // self.base_number ** index
+        second_term = self.value // self.base_number ** (index + 1)
+        new_value = first_term - (second_term * self.base_number)
+        return MathPyString(new_value)
 
     def __contains__(self, char) -> bool:
         if isinstance(char, (MathPyInt, MathPyString)):
