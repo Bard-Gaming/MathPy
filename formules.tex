@@ -235,9 +235,8 @@ On s'intéresse à trouver le chiffre d'indice $n \in \mathbb{N}$ d'un entier na
 \noindent On pose:
 
 \begin{equation}
-ind(l;n) = E \left(
-\frac{l - E \left( \frac{l}{b^{n + 1}} \right) \times b^{n + 1} }{b^{n}}
-\right)
+ind(l;n) = E \left( \frac{l}{b^{n}} \right) -
+E \left( \frac{l}{b^{n + 1}} \right) \times b
 \end{equation}
 
 On note que il s'agit de l'indice \textbf{partant de la droite} à $n = 0$. Pour avoir le chiffre d'indice $n$ \textbf{partant de la gauche}, il suffit de prendre $len(l) - n$ comme indice, soit $ind \left( l; len(l) - n \right)$, ce qui permet de suivre les conventions informatiques.
