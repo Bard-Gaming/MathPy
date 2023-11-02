@@ -132,7 +132,10 @@ class MathPyInt(MathPyNumber):
         self.accepted_operations = (MathPyInt, MathPyFloat, MathPyString)
 
     # --------- Methods --------- :
-    def method_to_str(self) -> "MathPyString":
+    def method_to_str(self, *args) -> "MathPyString":
+        if args:
+            raise MathPyTypeError(f'int.to_str() takes 0 arguments, {len(args)} given')
+
         return MathPyString(self.value)
 
     # --------- Miscellaneous --------- :
@@ -208,10 +211,16 @@ class MathPyString(MathPyNumber):
         return MathPyInt(self.value)
 
     # --------- Methods --------- :
-    def method_to_int(self) -> MathPyInt:
+    def method_to_int(self, *args) -> MathPyInt:
+        if args:
+            raise MathPyTypeError(f'str.to_int() takes 0 arguments, {len(args)} given')
+
         return MathPyInt(self.value)
 
-    def method_reversed(self) -> "MathPyString":
+    def method_reversed(self, *args) -> "MathPyString":
+        if args:
+            raise MathPyTypeError(f'str.reversed() takes 0 arguments, {len(args)} given')
+
         length = len(self) - 1
 
         return MathPyString(
