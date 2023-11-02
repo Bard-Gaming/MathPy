@@ -141,7 +141,7 @@ class MathPyParser:
     def _binary_operation(self, operators: list, function) -> BinaryOperationNode:
         left_node = function()
 
-        while self.current_token.get_value() in operators:
+        while self.current_token and self.current_token.get_value() in operators:
             operator = self.current_token
             self.advance()
 
@@ -275,10 +275,11 @@ class MathPyParser:
 
         parameter_values = []
 
-        if self.current_token.tt_type != 'TT_RIGHT_PARENTHESIS':
-            parameter_values.append(self.expression())
-        else:
+        if self.current_token.tt_type == 'TT_RIGHT_PARENTHESIS':  # no args, call method with empty args
+            self.advance()
             return MethodCallNode(atom, method_name, [])
+
+        parameter_values.append(self.expression())
 
         while self.current_token.tt_type == 'TT_COMMA':
             self.advance()
