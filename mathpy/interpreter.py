@@ -183,7 +183,7 @@ class MathPyInterpreter:
     def visit_MethodCallNode(self, node, context: MathPyContext):
         atom = self.visit(node.get_atom(), context)
         method_name = node.get_method_name()
-        parameter_list = [self.visit(param) for param in node.get_parameter_values()]
+        parameter_list = [self.visit(arg, context) for arg in node.get_parameter_values()]
 
         method = getattr(atom, f'method_{method_name}', None)
         if method is None:
