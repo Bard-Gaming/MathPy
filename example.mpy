@@ -1,12 +1,11 @@
 function bob(a, b) {
-    a = a + 1;
-    b = b + 2;
+    a = 3 + a * 84;
+    b = b * 3 + 124;
     return a + b;
 }
 
-var bobby_car = bob(2, "hello");
-var test = bobby_car.length;
+var value_1 = int(12 * random());
+var value_2 = int(10 * random());
+var test = bob(value_1, value_2);
 
-log(bobby_car.length.to_str() * 8465);
-log(test);
-log("well hello", test, "there");
+log("random value:", test);

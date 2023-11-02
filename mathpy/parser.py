@@ -226,6 +226,7 @@ class MathPyParser:
         self.advance()  # skip left parenthesis
 
         if self.current_token.tt_type == 'TT_RIGHT_PARENTHESIS':
+            self.advance()
             return FunctionCallNode(function_atom, [])  # call function without parameters
 
         parameter_values = []
