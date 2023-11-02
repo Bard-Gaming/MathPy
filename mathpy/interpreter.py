@@ -155,8 +155,7 @@ class MathPyInterpreter:
         context.declare(node.get_name(), function)
 
     def visit_FunctionCallNode(self, node, context: MathPyContext):
-        function_name = node.get_name()
-        function: MathPyFunction = context.get(function_name)  # get function from local context
+        function: MathPyFunction = self.visit(node.get_function_atom(), context)  # get function from atom
 
         parameter_values = [self.visit(value, context) for value in node.get_parameter_values()]
 

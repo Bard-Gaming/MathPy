@@ -35,28 +35,11 @@ class MathPyParser:
     def parse(self) -> MultipleStatementsNode:
         return self.multiple_statements()
 
-    @staticmethod
-    def _check_attribute(fnc):
-        def wrapper(self, *args, **kwargs):
-            atom = fnc(self, *args, **kwargs)
-
-            if self.current_token.tt_type == 'TT_DOT':
-                return self.access_attribute(atom)
-
-            return atom
-
-        return wrapper
-
     # ------------------ Language Grammar ------------------ :
-
-    @_check_attribute
-    def atom(self):
+    def sub_atom(self):
         token = self.current_token
 
         if token.tt_type == 'TT_NAME':
-            if self.future_token is not None and self.future_token.tt_type == 'TT_LEFT_PARENTHESIS':
-                return self.call_function()  # bob() --> call function bob
-
             return self.access_variable()
 
         elif token.tt_type == 'TT_STRING':
@@ -84,8 +67,21 @@ class MathPyParser:
             else:
                 raise MathPySyntaxError(")", self.current_token)
 
+    def atom(self, sub_atom=None):
+        sub_atom = self.sub_atom() if sub_atom is None else sub_atom
+        token = self.current_token
+
+        if token.tt_type == 'TT_LEFT_PARENTHESIS':  # left parenthesis after atom has to be a call
+            return self.call_function(sub_atom)
+
+        elif token.tt_type == 'TT_DOT':  # atom followed by . has to be attribute access
+            attribute = self.access_attribute(sub_atom)
+            return self.atom(attribute)  # pass attribute as atom (allows chained attributes)
+
+        return sub_atom
+
     def factor(self):
-        return self._binary_operation(['*', '/', '//', '%'], self.atom)
+        return self._binary_operation(['*', '/', '%'], self.atom)
 
     def term(self):
         return self._binary_operation(['+', '-'], self.factor)
@@ -224,18 +220,13 @@ class MathPyParser:
 
         return FunctionDefineNode(function_name, parameter_names, body)
 
-    def call_function(self) -> FunctionCallNode:
-        if self.current_token.tt_type != 'TT_NAME':
-            raise MathPySyntaxError('name', self.current_token)
-        function_name = self.current_token
-        self.advance()
-
+    def call_function(self, function_atom) -> FunctionCallNode:
         if self.current_token.tt_type != 'TT_LEFT_PARENTHESIS':
             raise MathPySyntaxError('(', self.current_token)
         self.advance()  # skip left parenthesis
 
         if self.current_token.tt_type == 'TT_RIGHT_PARENTHESIS':
-            return FunctionCallNode(function_name, [])  # call function without parameters
+            return FunctionCallNode(function_atom, [])  # call function without parameters
 
         parameter_values = []
         parameter_values.append(self.expression())  # append current expression to parameters (has to be expression)
@@ -250,7 +241,7 @@ class MathPyParser:
             raise MathPySyntaxError(')', self.current_token)
         self.advance()  # skip right parenthesis
 
-        return FunctionCallNode(function_name, parameter_values)
+        return FunctionCallNode(function_atom, parameter_values)
 
     def return_statement(self) -> ReturnNode:
         if self.current_token.tt_type != 'TT_RETURN':

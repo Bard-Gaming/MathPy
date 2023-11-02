@@ -132,18 +132,18 @@ class FunctionDefineNode:
 
 
 class FunctionCallNode:
-    def __init__(self, function_name, parameter_values: list):
-        self.function_name = function_name  # is Token
+    def __init__(self, function_atom, parameter_values: list):
+        self.function_atom = function_atom  # is atom
         self.parameter_values = parameter_values
 
-    def get_name(self) -> str:
-        return self.function_name.get_value()
+    def get_function_atom(self):
+        return self.function_atom
 
     def get_parameter_values(self) -> list:
         return self.parameter_values
 
     def __repr__(self) -> str:
-        return f'FunctionCallNode({self.function_name !r}, {self.parameter_values !r})'
+        return f'FunctionCallNode({self.function_atom !r}, {self.parameter_values !r})'
 
 
 class ReturnNode:
