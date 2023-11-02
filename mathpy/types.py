@@ -261,7 +261,7 @@ class MathPyString(MathPyNumber):
             raise MathPyValueError(f"Couldn't get 'int' value for {self}")
 
     def __str__(self) -> str:
-        return repr(self.string_from_value(self.value))  # call repr for quotation marks
+        return self.string_from_value(self.value)
 
     def __repr__(self) -> str:
         return f"MathPyString({self.value})"

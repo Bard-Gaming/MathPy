@@ -9,10 +9,6 @@ def bind(instance, function, name: str = None):
 
 def function_wrapper(fnc):
     def function_call(self, *args):
-        if len(args) != builtin_function_parameters[fnc.__name__]:
-            raise MathPyTypeError(
-                f'{self.function_name}() takes {builtin_function_parameters[fnc.__name__]} arguments, {len(args)} given.')
-
         function_output = fnc(*args)
 
         return function_output
@@ -21,24 +17,24 @@ def function_wrapper(fnc):
 
 
 # ----------- Builtin Function Implementations ----------- :
-def builtin_function_log(value):
-    print(value)
+def builtin_function_log(*args):
+    print(*args)
     return MathPyNull()
 
 
-def builtin_function_str(value):
+def builtin_function_str(value, *args):
+    if args:
+        raise MathPyTypeError(f'str() takes 1 argument, {len(args) + 1} given.')
+
     return MathPyString(str(value))
 
 
-def builtin_function_int(value):
+def builtin_function_int(value, *args):
+    if args:
+        raise MathPyTypeError(f'int() takes 1 argument, {len(args) + 1} given.')
+
     return MathPyInt(int(value))
 
-
-builtin_function_parameters = {
-    "builtin_function_log": 1,
-    "builtin_function_str": 1,
-    "builtin_function_int": 1,
-}
 
 builtins_list = (
     builtin_function_log, builtin_function_str,
