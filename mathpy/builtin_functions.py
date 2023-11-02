@@ -1,5 +1,6 @@
-from .types import MathPyString, MathPyInt, MathPyNull
+from .types import MathPyString, MathPyInt, MathPyFloat, MathPyNull
 from .errors import MathPyTypeError
+from random import random
 
 
 def bind(instance, function, name: str = None):
@@ -36,9 +37,16 @@ def builtin_function_int(value, *args):
     return MathPyInt(int(value))
 
 
+def builtin_function_random(*args):
+    if args:
+        raise MathPyTypeError(f'int() takes no arguments, {len(args)} given.')
+
+    return MathPyFloat(random())
+
+
 builtins_list = (
     builtin_function_log, builtin_function_str,
-    builtin_function_int,
+    builtin_function_int, builtin_function_random,
 )
 
 builtin_functions = {
