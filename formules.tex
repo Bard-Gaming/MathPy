@@ -140,7 +140,7 @@ len(l) = E \left( log_{b} \left( l \right) \right) + 1
 
 \noindent \textbf{Démonstration}:
 
-On pose:
+\noindent On pose:
 
 \begin{align*}
 \forall b \in \mathbb{N} - \{0; 1\} $, une base quelconque$
@@ -150,7 +150,7 @@ On pose:
 \forall k \in \mathbb{R} $, tel que $1 \leqslant k < b
 \end{align*} \\
 
-On a:
+\noindent On a:
 
 \begin{align*}
 1 \leqslant k < b
@@ -166,7 +166,7 @@ $k$ et $b$ sont positifs, donc:
 
 \newpage
 
-On reprend la formule de $l$:
+\noindent On reprend la formule de $l$:
 
 \begin{align*}
 $l = k \times b^{n - 1}$
@@ -201,7 +201,7 @@ or, on sait que $E \left( log_{b} \left( k \right) \right) = 0$, donc:
 \Rightarrow  E \left( log_{b} \left( l \right) \right) + 1 = 0 + n
 \end{align*} \\
 
-On retrouve bien:
+\noindent On retrouve bien:
 
 $n = E \left( log_{b} \left( l \right) \right) + 1$ \\
 
@@ -209,7 +209,7 @@ $n = E \left( log_{b} \left( l \right) \right) + 1$ \\
 
 \noindent \textbf{Exemple}:
 
-On reprend la base $b = 26$ définie dans les préliminaires:
+\noindent On reprend la base $b = 26$ définie dans les préliminaires:
 
 \begin{align*}
 $l = ($bonjour$)_{26} = (481363913)_{10}$
@@ -225,7 +225,7 @@ $len$ \left( l \right) = E \left( log_{26} \left( l \right) \right) + 1 = 6 + 1
 $len$ \left( l \right) = 7
 \end{align*} \\
 
-En comptant la quantité de chiffres dans $($bonjour$)_{26}$, on retrouve bien $7$.
+\noindent En comptant la quantité de chiffres dans $($bonjour$)_{26}$, on retrouve bien $7$.
 
 \newpage
 
@@ -239,7 +239,112 @@ ind(l;n) = E \left( \frac{l}{b^{n}} \right) -
 E \left( \frac{l}{b^{n + 1}} \right) \times b
 \end{equation}
 
-On note que il s'agit de l'indice \textbf{partant de la droite} à $n = 0$. Pour avoir le chiffre d'indice $n$ \textbf{partant de la gauche}, il suffit de prendre $len(l) - n$ comme indice, soit $ind \left( l; len(l) - n \right)$, ce qui permet de suivre les conventions informatiques.
+On note que il s'agit de l'indice \textbf{partant de la droite} à $n = 0$. Pour avoir le chiffre d'indice $n$ \textbf{partant de la gauche}, il suffit de prendre $len(l) - n$ comme indice, soit $ind \left( l; len(l) - n \right)$, ce qui permet de suivre les conventions informatiques. \\
 
+\noindent \textbf{Démonstration}:
+
+\noindent On pose:
+
+\begin{align*}
+\forall x \in \mathbb{N}
+
+\forall n \in \mathbb{N} $, l'indice du nombre recherché, tel que $ 0 \leqslant n < len(x) \end{align*} \\
+
+\noindent On peut écrire $x$ tel:
+
+\begin{equation}
+x = \varepsilon_{1} \times b^{n + 1} + c \times b^{n} + \varepsilon_{2}
+\end{equation}
+
+\noindent avec:
+
+\begin{align*}
+0 \leqslant c < b $; $ c \in \mathbb{N}
+
+0 \leqslant \varepsilon_{1} $; $ \varepsilon_{1} \in \mathbb{N}
+
+0 \leqslant \varepsilon_{2} < b^{n} $; $ \varepsilon_{2} \in \mathbb{N}
+\end{align*} \\
+
+\noindent On cherche à trouver une formule de $c$ en fonction de $x$, $n$, et $b$. \\
+
+\begin{align*}
+\[ c = \frac{x - \varepsilon_{1} \times b^{n+1} - \varepsilon_{2}}{b^{n}} \]
+
+\Rightarrow c = \frac{x - \varepsilon_{2}}{b^{n}} - \varepsilon_{1} \times b
+
+\Rightarrow c + \varepsilon_{1} \times b = \frac{x - \varepsilon_{2}}{b^{n}}
+
+\Rightarrow c + \varepsilon_{1} \times b = \frac{x}{b^{n}} - \frac{\varepsilon_{2}}{b^{n}}
+\end{align*} \\
+
+\newpage
+
+\begin{align*}
+\left( c + \varepsilon_{1} \times b^{n+1} \right) \in \mathbb{N} $, donc $
+c + \varepsilon_{1} \times b^{n+1} = E \left( c + \varepsilon_{1} \times b^{n+1} \right)
+
+\Rightarrow c + \varepsilon_{1} \times b^{n+1} =
+E \left( \frac{x}{b^{n}} - \frac{\varepsilon_{2}}{b^{n}} \right)
+
+\Rightarrow frac \left( \frac{x}{b^{n}} \right) =
+frac \left( \frac{\varepsilon_{1} \times b^{n + 1} + c \times b^{n} + \varepsilon_{2}}{b^{n}} \right)
+
+\Rightarrow frac \left( \frac{x}{b^{n}} \right) =
+frac \left( \varepsilon_{1} \times b + c + \frac{\varepsilon_{2}}{b^{n}} \right)
+\end{align*} \\
+
+$(\varepsilon_{1} \times b + c) \in \mathbb{N}$, donc:
+
+\begin{align*}
+$frac$ \left( \varepsilon_{1} \times b + c \right) = 0
+
+\Rightarrow frac \left( \varepsilon_{1} \times b + c + \frac{\varepsilon_{2}}{b^{n}} \right) =
+frac \left( \frac{\varepsilon_{2}}{b^{n}} \right)
+
+\Rightarrow frac \left( \frac{x}{b^{n}} \right) =
+frac \left( \frac{\varepsilon_{2}}{b^{n}} \right)
+
+\Rightarrow frac \left( \frac{x}{b^{n}} \right) -
+frac \left( \frac{\varepsilon_{2}}{b^{n}} \right) < 1
+\end{align*} \\
+
+On reprend la formule de $\left( c + \varepsilon_{1} \times b^{n+1} \right)$:
+
+\begin{align*}
+c + \varepsilon_{1} \times b^{n+1} =
+E \left( \frac{x}{b^{n}} - \frac{\varepsilon_{2}}{b^{n}} \right)
+
+\Rightarrow c + \varepsilon_{1} \times b^{n+1} =
+E \left( \frac{x}{b^{n}} \right) - E \left( \frac{\varepsilon_{2}}{b^{n}} \right)
+\end{align*} \\
+
+Or, on a:
+
+\begin{align*}
+0 \leqslant \varepsilon_{2} < b^{n}
+
+\Rightarrow 0 \leqslant \frac{\varepsilon_{2}}{b^{n}} < \frac{b^{n}}{b^{n}}
+
+\Rightarrow 0 \leqslant \frac{\varepsilon_{2}}{b^{n}} < 1
+
+\Rightarrow E \left( \frac{\varepsilon_{2}}{b^{n}} \right) = 0
+\end{align*} \\
+
+\begin{align*}
+c + \varepsilon_{1} \times b^{n+1} =
+E \left( \frac{x}{b^{n}} \right) - E \left( \frac{\varepsilon_{2}}{b^{n}} \right)
+
+\Rightarrow c + \varepsilon_{1} \times b^{n+1} =
+E \left( \frac{x}{b^{n}} \right) - 0
+
+\Rightarrow c + \varepsilon_{1} \times b^{n+1} = E \left( \frac{x}{b^{n}} \right)
+\end{align*} \\
+
+\[
+c + \varepsilon_{1} \times b^{n+1} = E \left( \frac{x}{b^{n}} \right)
+\]
+
+Il suffit plus qu'à exprimer $\varepsilon_{1} \times b^{n+1}$ en fonction de $x$, $n$ et $b$.
 
 \end{document}
