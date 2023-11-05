@@ -363,45 +363,63 @@ E \left( \frac{x}{b^{n+1}} - \frac{c}{b} - \frac{\varepsilon_{2}}{b^{n+1}} \righ
 
 Or, on a:
 
-$\frac{x}{b^{n+1}} =
-\frac{\varepsilon_{1} \times b^{n + 1} + c \times b^{n} + \varepsilon_{2}}{b^{n+1}}$
+$frac \left( \frac{x}{b^{n+1}} \right) =
+frac \left( \frac{\varepsilon_{1} \times b^{n + 1} + c \times b^{n} + \varepsilon_{2}}{b^{n+1}} \right)$
 
-$\Rightarrow \frac{x}{b^{n+1}} =
-\varepsilon_{1} + \frac{c}{b} + \frac{\varepsilon_{2}}{b^{n+1}}$ \\
+$\Rightarrow frac \left( \frac{x}{b^{n+1}} \right) =
+frac \left( \varepsilon_{1} + \frac{c}{b} + \frac{\varepsilon_{2}}{b^{n+1}} \right)$
 
-On a:
+$\Rightarrow frac \left( \frac{x}{b^{n+1}} \right) =
+frac \left( \frac{c}{b} + \frac{\varepsilon_{2}}{b^{n+1}} \right)$, car
+$\varepsilon_{1} \in \mathbb{N}$ \\
 
-$0 \leqslant c < b$ \hspace{5cm} $0 \leqslant \varepsilon_{2} < b^{n}$
+Donc:
 
-$\Rightarrow 0 \leqslant \frac{c}{b} < 1$ \hspace{44mm}
-$\Rightarrow 0 \leqslant \frac{\varepsilon_{2}}{b^{n+1}} < \frac{1}{b} < 1$
+$frac \left( \frac{x}{b^{n+1}} \right) -
+frac \left( \frac{c}{b} \right) - 
+frac \left( \frac{\varepsilon_{2}}{b^{n+1}} \right) = 0$ \\
 
-$\Rightarrow E \left( \frac{c}{b} \right) = 0$ \hspace{44mm}
+Donc, on peut décomposer la formule:
+
+$\varepsilon_{1} =
+E \left( \frac{x}{b^{n+1}} - \frac{c}{b} - \frac{\varepsilon_{2}}{b^{n+1}} \right)$
+
+$\Rightarrow \varepsilon_{1} =
+E \left( \frac{x}{b^{n+1}} \right) -
+E \left( \frac{c}{b} \right) - 
+E \left( \frac{\varepsilon_{2}}{b^{n+1}} \right)$ \\
+
+De plus, on a:
+
+$b^{n+1} > c \times b^{n} > \varepsilon_{2} \geqslant 0$ (d'après leur définition)
+
+$\Rightarrow 1 > \frac{c}{b} > \frac{\varepsilon_{2}}{b^{n+1}} \geqslant 0$
+
+$\Rightarrow E \left( \frac{c}{b} \right) = 0$
+
 $\Rightarrow E \left( \frac{\varepsilon_{2}}{b^{n+1}} \right) = 0$ \\
 
-$\Rightarrow 0 \leqslant \frac{c}{b} + \frac{\varepsilon_{2}}{b^{n+1}} < 1 + \frac{1}{b} < b$
+Donc:
 
-$\Rightarrow E \left( \frac{c}{b} + \frac{\varepsilon_{2}}{b^{n+1}} \right) =
-E \left( \frac{c}{b} \right) + E \left( \frac{\varepsilon_{2}}{b^{n+1}} \right)$ \\
+$\varepsilon_{1} =
+E \left( \frac{x}{b^{n+1}} \right) -
+E \left( \frac{c}{b} \right) - 
+E \left( \frac{\varepsilon_{2}}{b^{n+1}} \right)$
 
-Comme dit, $\varepsilon_{1} \in \mathbb{N}$, donc $frac \left( \varepsilon_{1} \right) = 0$
- et $E \left( \varepsilon_{1} \right) = \varepsilon_{1}$
-
-$
-\frac{x}{b^{n+1}} =
-\varepsilon_{1} + \frac{c}{b} + \frac{\varepsilon_{2}}{b^{n+1}}
-$
-
-$
-\Rightarrow \frac{x}{b^{n+1}} =
-E \left( \varepsilon_{1} \right) +
-E \left( \frac{c}{b} \right) +
-E \left( \frac{\varepsilon_{2}}{b^{n+1}} \right)
-$
+$\Rightarrow \varepsilon_{1} = E \left( \frac{x}{b^{n+1}} \right) - 0 - 0$
 
 \[
-\frac{x}{b^{n+1}} =
-E \left( \varepsilon_{1} \right)
+\varepsilon_{1} = E \left( \frac{x}{b^{n+1}} \right)
+\]
+
+\noindent On a trouvé une formule pour $\varepsilon_{1}$ en fonction de $x$, $n$ et $b$. On note:
+
+\[
+c + \varepsilon_{1} \times b^{n+1} = E \left( \frac{x}{b^{n}} \right)
+\]
+
+\[
+\Rightarrow c = E \left( \frac{x}{b^{n}} \right) - E \left( \frac{x}{b^{n+1}} \right) \times b^{n+1}
 \]
 
 \end{document}
