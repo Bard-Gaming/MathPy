@@ -5,8 +5,13 @@ module_folder = "/".join(__file__.split('\\')[:-1])
 program_start_time = time()
 
 
+def update_program_start_time():
+    global program_start_time
+    program_start_time = time()
+
+
 def current_time() -> float:
-    return round(time() - program_start_time, 3)
+    return round((time() - program_start_time) * 1000, 3)  # in ms
 
 
 def call_logger(fnc):
