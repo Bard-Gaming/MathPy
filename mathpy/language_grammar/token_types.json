@@ -1,5 +1,5 @@
 {
-  "TT_IGNORE":            [" ", "\n"],
+  "TT_IGNORE":            [" ", "\n", "\t"],
   "TT_NEWLINE":           [";"],
 
   "TT_EQUALS_SIGN":       ["="],
