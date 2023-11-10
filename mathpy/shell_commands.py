@@ -1,4 +1,4 @@
-from . import run_file
+from . import run_file, run_shell
 from .common import current_time
 
 
@@ -11,3 +11,7 @@ def run(path: str, runtime_message: str = "false", *args):
         run_file(file)
         if runtime_message == "true":
             print(f"\n\nSuccessfully ran {path !r} (Time Elapsed: {current_time()}ms)\n")
+
+
+def shell(*args) -> None:
+    run_shell()

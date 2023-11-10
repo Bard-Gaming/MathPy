@@ -75,7 +75,7 @@ class MathPyInterpreter:
         self.context = MathPyContext(top_level=True, display_name="'main'")
 
     def interpret(self, ast):
-        self.visit(ast, self.context)
+        return self.visit(ast, self.context)
 
     def visit(self, node, context: MathPyContext):
         node_name = node.__class__.__name__  # get node class name in 'str'

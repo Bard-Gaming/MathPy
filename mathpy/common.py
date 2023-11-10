@@ -2,6 +2,8 @@ from time import time
 
 module_folder = "/".join(__file__.split('\\')[:-1])
 
+module_version = '1.0'
+
 program_start_time = time()
 
 

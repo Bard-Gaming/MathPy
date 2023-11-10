@@ -35,6 +35,9 @@ class MathPyParser:
     def parse(self) -> MultipleStatementsNode:
         return self.multiple_statements()
 
+    def parse_shell(self):
+        return self.statement()
+
     # ------------------ Language Grammar ------------------ :
     def sub_atom(self):
         token = self.current_token

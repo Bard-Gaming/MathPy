@@ -1,5 +1,36 @@
-# Unsorted Ideas:
-- Indexing w. formula (O(1) complexity, same as normal)
-- Reversing Strings (& other) at O(1) complexity
-- (simple) Cryptography with strings (mult, add, etc...)
-- Performance?
+# TODO Checklist
+
+## MathPy Language
+
+### Main
+
+- [ ] Rework Lexer tokenize process
+	- [ ] Allow tokens longer than 1 character
+
+- [ ] Boolean Operators
+
+- [ ] Conditions
+	- [ ] if
+	- [ ] else if/elif --> decide based on implementation complexity
+	- [ ] else (if not already covered by else if)
+
+- [ ] Loops
+	- [ ] For loop
+	- [ ] While loop
+
+- [ ] Lists
+	- [ ] Add Iterables class
+
+- [ ] Objects (JS)
+	- [ ] Allow names in body without being defined --> attributes/methods
+
+### Secondary
+- [ ] Find a better algorithm/formula for \_\_getitem\_\_ MathPyString
+
+## MathPy Formulas (LaTeX)
+
+- [ ] Add technical (IT) information on each formula:
+	- [ ] Complexity (Big-O)
+	- [ ] Implementation
+
+- [ ] Fix demonstration for ind() formula
