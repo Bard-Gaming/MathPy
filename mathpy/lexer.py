@@ -9,6 +9,12 @@ with open(f'{module_folder}/language_grammar/token_types.json', 'rt', encoding='
 with open(f'{module_folder}/language_grammar/keywords.json', 'rt', encoding='utf-8') as keywords_file:
     token_keywords: dict = json.loads(keywords_file.read())
 
+token_type_lookup = {}
+for tt_type, char_list in token_types.items():
+    for composed_char in char_list:
+        if tt_type[0] != "_":
+            token_type_lookup[composed_char] = tt_type
+
 
 class MathPyLexer:
     default_treatment_types = token_types['TT_NEWLINE'] + token_types['TT_EQUALS_SIGN']
@@ -92,6 +98,36 @@ class MathPyLexer:
         while self.current_char != '\n':
             self.advance()
 
+    def make_equals(self) -> Token:
+        first_char: str = self.current_char
+        tt_type = "TT_EQUALS_SIGN"
+
+        line = self.current_line
+        column = self.current_column
+
+        self.advance()
+
+        if first_char + self.current_char in token_types["TT_BOOLEAN_OPERATOR"]:
+            first_char = first_char + self.current_char
+            tt_type = "TT_BOOLEAN_OPERATOR"
+            self.advance()
+
+        return Token(first_char, tt_type, line, column)
+
+    def make_boolean_operator(self) -> Token:
+        first_char = self.current_char
+        line = self.current_line
+        column = self.current_column
+
+        self.advance()
+
+        if first_char + self.current_char in token_types["TT_BOOLEAN_OPERATOR"]:
+            token = Token(first_char + self.current_char, "TT_BOOLEAN_OPERATOR", line, column)
+            self.advance()
+            return token
+
+        raise MathPyIllegalCharError(f"Invalid boolean operator at line {line}, column {column}")  # TODO: Change to SyntaxError
+
     # -------------------------- Tokenize process --------------------------
 
     def default_tokenize_treatment(self, token_list: list, token_type: str) -> None:
@@ -99,26 +135,35 @@ class MathPyLexer:
         self.advance()
 
     def tokenize(self) -> list[Token]:
-        token_list = []
-        token_type_table = {
-            "TT_IGNORE": lambda: self.advance(),
-            "TT_NAME": lambda: token_list.append(self.make_name()),
-            "TT_QUOTE": lambda: token_list.append(self.make_string()),
-            "TT_DIGIT": lambda: token_list.append(self.make_number()),
-            "TT_COMMENT": lambda: self.make_comment()
-        }
+        token_list: list = []
 
         while self.current_char is not None:
-            current_tt_type = None
-            for current_tt, tt_values in token_types.items():
-                if current_tt[0] != '_' and self.current_char in tt_values:  # ignore keys that start with "_"
-                    current_tt_type = current_tt
+            if self.current_char in token_types["TT_IGNORE"]:
+                self.advance()
 
-            if current_tt_type is None:  # illegal char
-                raise MathPyIllegalCharError(f'Invalid character {self.current_char !r} at line {self.current_line}, column {self.current_column}')
+            elif self.current_char in token_types["TT_EQUALS_SIGN"]:
+                token_list.append(self.make_equals())
+
+            elif self.current_char in ("&", "|"):
+                token_list.append(self.make_boolean_operator())
+
+            elif self.current_char in token_types["TT_QUOTE"]:
+                token_list.append(self.make_string())
+
+            elif self.current_char in token_types["TT_NAME"]:
+                token_list.append(self.make_name())
+
+            elif self.current_char in token_types["TT_DIGIT"]:
+                token_list.append(self.make_number())
+
+            elif self.current_char in token_types["TT_COMMENT"]:
+                token_list.append(self.make_comment())
 
             else:
-                function = token_type_table.get(current_tt_type, lambda: self.default_tokenize_treatment(token_list, current_tt_type))
-                function()
+                current_tt_type = token_type_lookup.get(self.current_char)
+                if current_tt_type is not None:
+                    self.default_tokenize_treatment(token_list, current_tt_type)
+                else:
+                    raise MathPyIllegalCharError(f"Illegal character at line {self.current_line}, column {self.current_column}")
 
         return token_list
