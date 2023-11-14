@@ -89,8 +89,11 @@ class MathPyParser:
     def term(self):
         return self._binary_operation(['+', '-'], self.factor)
 
+    def boolean_operation(self):
+        return self._binary_operation(['&&', '||'], self.term)
+
     def expression(self):
-        return self.term()
+        return self.boolean_operation()
 
     def lesser_statement(self):  # intermediary statement that only allows expressions & code blocks
         if self.current_token.tt_type == 'TT_LEFT_BRACE':

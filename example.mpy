@@ -9,3 +9,5 @@ var value_2 = int(10 * random());
 var test = bob(value_1, value_2);
 
 log("random value:", test);
+log("random string:", test.to_str());
+log("test:", (true || 5) + 3)
