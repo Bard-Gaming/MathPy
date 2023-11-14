@@ -10,4 +10,4 @@ var test = bob(value_1, value_2);
 
 log("random value:", test);
 log("random string:", test.to_str());
-log("test:", 5 && 0)
+log("test:", (true || 5) + 3)

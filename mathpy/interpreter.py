@@ -127,10 +127,8 @@ class MathPyInterpreter:
         operator = operator.get_value()  # operator is Token, get 'str' value
         right_value = self.visit(right_value, context)  # is Parser Node, turn to Custom Type
 
-        if operator == "&&":
-            operator = "or"
-        elif operator == "||":
-            operator = "and"
+        if operator in ("&&", "||"):
+            operator = operator[0]
 
         return eval(f"left_value {operator} right_value")  # return MathPyString(x) + MathPyInt(y) for instance
 

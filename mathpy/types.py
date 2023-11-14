@@ -37,6 +37,15 @@ class MathPyBool(MathPyObject):
 
         self.value = value
 
+    # ------- Logic Operations ------- :
+    def __or__(self, other) -> "MathPyBool":
+        return MathPyBool(bool(self.value and other.value))
+
+    def __and__(self, other) -> "MathPyBool":
+        return MathPyBool(bool(self.value and other.value))
+
+    # ------- Miscellaneous ------- :
+
     def __int__(self) -> int:
         return 1 * self.value  # 1 * False = 0; 1 * True = 1
 
@@ -49,7 +58,7 @@ class MathPyBool(MathPyObject):
 
 class MathPyNumber(MathPyObject):
     def __init__(self, value: int | float):  # To be called before self.accepted_values is changed
-        self.accepted_operations = (MathPyFloat, MathPyInt, MathPyString)
+        self.accepted_operations = (MathPyFloat, MathPyInt, MathPyString, MathPyBool)
         self.value = value
 
     # ------- Binary Operations ------- :
@@ -116,10 +125,10 @@ class MathPyNumber(MathPyObject):
         return self._logic_operation(other, '>')
 
     def __or__(self, other):
-        return self.value or other.value
+        return MathPyBool(bool(self.value or other.value))
 
-    def __and__(self, other):
-        return self.value and other.value
+    def __and__(self, other) -> MathPyBool:
+        return MathPyBool(bool(self.value and other.value))
 
     # ------- Miscellaneous ------- :
     def __str__(self) -> str:
@@ -135,7 +144,7 @@ class MathPyInt(MathPyNumber):
             raise ValueError(f'{value !r} is not of type \'int\'')
 
         super().__init__(value)  # cast to 'int' in case it's a float
-        self.accepted_operations = (MathPyInt, MathPyFloat, MathPyString)
+        self.accepted_operations = (MathPyInt, MathPyFloat, MathPyString, MathPyBool)
 
     # --------- Methods --------- :
     def method_to_str(self, *args) -> "MathPyString":
@@ -155,7 +164,7 @@ class MathPyFloat(MathPyNumber):
             raise ValueError(f'{value !r} is not of type \'float\'')
 
         super().__init__(value)
-        self.accepted_operations = (MathPyFloat, MathPyInt)
+        self.accepted_operations = (MathPyFloat, MathPyInt, MathPyBool)
 
     def __int__(self) -> int:
         return int(self.value)
@@ -230,7 +239,9 @@ class MathPyString(MathPyNumber):
         length = len(self) - 1
 
         return MathPyString(
-            sum(((self.value // self.base_number ** i) - ((self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (length - i) for i in range(length + 1))
+            sum(((self.value // self.base_number ** i) - (
+                        (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
+                            length - i) for i in range(length + 1))
         )
 
     # ------- Miscellaneous ------- :
