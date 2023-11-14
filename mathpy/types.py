@@ -115,6 +115,12 @@ class MathPyNumber(MathPyObject):
     def __gt__(self, other) -> MathPyBool:
         return self._logic_operation(other, '>')
 
+    def __or__(self, other):
+        return self.value or other.value
+
+    def __and__(self, other):
+        return self.value and other.value
+
     # ------- Miscellaneous ------- :
     def __str__(self) -> str:
         return str(self.value)
