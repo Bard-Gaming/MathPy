@@ -4,8 +4,8 @@
 
 ### Main
 
-- [ ] Rework Lexer tokenize process
-	- [ ] Allow tokens longer than 1 character
+- [x] Rework Lexer tokenize process
+	- [x] Allow tokens longer than 1 character
 
 - [ ] Boolean Operators
 

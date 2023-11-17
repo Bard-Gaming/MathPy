@@ -37,6 +37,23 @@ class MathPyBool(MathPyObject):
 
         self.value = value
 
+    # ------- Binary Operations ------- :
+
+    def __add__(self, other):
+        return other.__add__(MathPyInt(int(self)))
+
+    def __sub__(self, other):
+        return other.__sub__(MathPyInt(int(self)))
+
+    def __mul__(self, other):
+        return other.__mul__(MathPyInt(int(self)))
+
+    def __truediv__(self, other):
+        return other.__truediv__(MathPyInt(int(self)))
+
+    def __floordiv__(self, other):
+        return other.__floordiv__(MathPyInt(int(self)))
+
     # ------- Logic Operations ------- :
     def __or__(self, other) -> "MathPyBool":
         return MathPyBool(bool(self.value and other.value))
