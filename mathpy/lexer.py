@@ -1,5 +1,5 @@
 from .tokens import Token
-from .errors import MathPyIllegalCharError
+from .errors import MathPyIllegalCharError, MathPySyntaxError
 from .common import module_folder
 import json
 
@@ -126,7 +126,10 @@ class MathPyLexer:
             self.advance()
             return token
 
-        raise MathPyIllegalCharError(f"Invalid boolean operator at line {line}, column {column}")  # TODO: Change to SyntaxError
+        if first_char in ('&', '|'):
+            raise MathPySyntaxError(f"Invalid boolean operator at line {line}, column {column}")
+        else:
+            return Token(first_char, 'TT_BOOLEAN_OPERATOR', line, column)
 
     # -------------------------- Tokenize process --------------------------
 
@@ -144,7 +147,7 @@ class MathPyLexer:
             elif self.current_char in token_types["TT_EQUALS_SIGN"]:
                 token_list.append(self.make_equals())
 
-            elif self.current_char in ("&", "|"):
+            elif self.current_char in ("&", "|", "<", ">"):
                 token_list.append(self.make_boolean_operator())
 
             elif self.current_char in token_types["TT_QUOTE"]:

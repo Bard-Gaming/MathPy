@@ -1,4 +1,4 @@
-from .errors import MathPyIndexError, MathPyTypeError, MathPyValueError, MathPyAttributeError
+from .errors import MathPyIndexError, MathPyTypeError, MathPyValueError, MathPyAttributeError, MathPyZeroDivisionError
 from math import log
 
 
@@ -20,6 +20,24 @@ class MathPyObject:
 
 
 class MathPyNull(MathPyObject):
+    # ------- Binary Operations ------- :
+    def __add__(self, other):
+        return other.__add__(MathPyInt(0))
+
+    def __sub__(self, other):
+        return other.__sub__(MathPyInt(0))
+
+    def __mul__(self, other):
+        return other.__mul__(MathPyInt(0))
+
+    def __truediv__(self, other):
+        raise MathPyZeroDivisionError("Can't divide by 0")
+
+    def __floordiv__(self, other):
+        raise MathPyZeroDivisionError("Can't divide by 0")
+
+    # ------- Miscellaneous ------- :
+
     def __int__(self) -> int:
         return 0
 

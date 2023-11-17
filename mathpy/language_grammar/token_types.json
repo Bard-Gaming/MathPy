@@ -4,7 +4,7 @@
 
   "TT_EQUALS_SIGN":       ["="],
   "TT_BINARY_OPERATOR":   ["+", "-", "*", "/"],
-  "TT_BOOLEAN_OPERATOR":  ["==", "&&", "||"],
+  "TT_BOOLEAN_OPERATOR":  ["==", "<", "<=", ">", ">=", "&&", "||"],
 
   "TT_DOT":               ["."],
   "TT_COMMA":             [","],

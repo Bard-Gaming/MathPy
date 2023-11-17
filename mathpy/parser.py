@@ -92,8 +92,11 @@ class MathPyParser:
     def boolean_operation(self):
         return self._binary_operation(['&&', '||'], self.term)
 
+    def comparison_operation(self):
+        return self._binary_operation(['==', '<', '<=', '>', '>='], self.boolean_operation)
+
     def expression(self):
-        return self.boolean_operation()
+        return self.comparison_operation()
 
     def lesser_statement(self):  # intermediary statement that only allows expressions & code blocks
         if self.current_token.tt_type == 'TT_LEFT_BRACE':
@@ -145,7 +148,7 @@ class MathPyParser:
     # ------------------ Implementation ------------------ :
 
     def _binary_operation(self, operators: list, function) -> BinaryOperationNode:
-        left_node = function()
+        left_node = function()  # get node of lower order
 
         while self.current_token and self.current_token.get_value() in operators:
             operator = self.current_token
@@ -154,7 +157,7 @@ class MathPyParser:
             right_node = function()
             left_node = BinaryOperationNode(left_node, right_node, operator)
 
-        return left_node
+        return left_node  # return lower order node or binary operation node
 
     def define_variable(self) -> VariableDefineNode:
         self.advance()  # skip 'var' token
