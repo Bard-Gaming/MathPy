@@ -58,19 +58,20 @@ class MathPyBool(MathPyObject):
     # ------- Binary Operations ------- :
 
     def __add__(self, other):
-        return other.__add__(MathPyInt(int(self)))
+        return other.__add__(MathPyInt(int(self)))  # commutative, so this works
 
     def __sub__(self, other):
-        return other.__sub__(MathPyInt(int(self)))
+        other = MathPyInt(0) - other  # subtraction is non-commutative, so get opposite first, then add
+        return other.__add__(MathPyInt(int(self)))
 
     def __mul__(self, other):
-        return other.__mul__(MathPyInt(int(self)))
+        return other.__mul__(MathPyInt(int(self)))  # commutative, so this works
 
     def __truediv__(self, other):
-        return other.__truediv__(MathPyInt(int(self)))
+        return MathPyInt(int(self)) / other.value
 
     def __floordiv__(self, other):
-        return other.__floordiv__(MathPyInt(int(self)))
+        return MathPyInt(int(self)) // other.value
 
     # ------- Logic Operations ------- :
     def __or__(self, other) -> "MathPyBool":
