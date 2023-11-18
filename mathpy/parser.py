@@ -1,7 +1,8 @@
 from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
-                           FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode, BooleanNode)
+                           FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode, BooleanNode,
+                           IfConditionNode)
 
 
 class MathPyParser:
@@ -98,14 +99,14 @@ class MathPyParser:
     def expression(self):
         return self.comparison_operation()
 
-    def lesser_statement(self):  # intermediary statement that only allows expressions & code blocks
+    def lesser_statement(self, *, insert_newline: bool = True):  # intermediary statement (expressions & code blocks)
         if self.current_token.tt_type == 'TT_LEFT_BRACE':
             self.advance()  # skip left brace
             code_block_body = self.multiple_statements()
 
             if self.current_token.tt_type == 'TT_RIGHT_BRACE':
                 self.advance()  # skip right brace
-                self.auto_insert_newline()  # auto-insert newline since this has to be the end of current statement
+                if insert_newline: self.auto_insert_newline()  # insert newline since end of statement
                 return CodeBlockNode(code_block_body)
             else:
                 raise MathPySyntaxError('}', self.current_token)
@@ -127,6 +128,9 @@ class MathPyParser:
         elif token.tt_type == 'TT_NAME':
             if self.future_token is not None and self.future_token.tt_type == 'TT_EQUALS_SIGN':
                 return self.assign_variable()
+
+        elif token.tt_type == 'TT_CONDITIONAL':
+            return self.if_condition()
 
         return self.lesser_statement()
 
@@ -304,3 +308,47 @@ class MathPyParser:
             return MethodCallNode(atom, method_name, parameter_values)
         else:
             raise MathPySyntaxError(')', self.current_token)
+
+    def if_condition_block(self) -> tuple:
+        if self.current_token.tt_type == 'TT_CONDITIONAL' and self.current_token.get_value() != 'if':
+            raise MathPySyntaxError('if', self.current_token)
+        self.advance()
+
+        if self.current_token.tt_type != 'TT_LEFT_PARENTHESIS':
+            raise MathPySyntaxError('(', self.current_token)
+        self.advance()
+
+        condition_expression = self.expression()
+
+        if self.current_token.tt_type != 'TT_RIGHT_PARENTHESIS':
+            raise MathPySyntaxError(')', self.current_token)
+        self.advance()
+
+        body_code_block = self.lesser_statement(insert_newline=False)
+
+        return condition_expression, body_code_block
+
+    def if_condition(self) -> IfConditionNode:
+        first_condition, first_body = self.if_condition_block()
+
+        condition_list: list = [first_condition]
+        body_list: list = [first_body]
+
+        while self.current_token is not None and self.current_token.tt_type == 'TT_CONDITIONAL':
+            if self.current_token.get_value() != 'else':  # if it's 'if', return node and make new IfConditionNode
+                return IfConditionNode(condition_list, body_list)
+            self.advance()  # skip 'else' Token
+
+            if self.current_token.get_value() == 'if':
+                condition, body_node = self.if_condition_block()
+                condition_list.append(condition)
+                body_list.append(body_node)
+
+            else:
+                condition_list.append(BooleanNode(True))  # else, so this always executes if the code reaches it
+                body_list.append(self.lesser_statement())  # don't skip newline
+
+                return IfConditionNode(condition_list, body_list)  # this is "else" statement, so nothing comes after
+
+        self.auto_insert_newline()  # insert newline for next statement
+        return IfConditionNode(condition_list, body_list)

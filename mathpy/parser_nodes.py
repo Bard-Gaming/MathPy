@@ -5,10 +5,13 @@ class NullTypeNode:
 
 class BooleanNode:
     def __init__(self, value):
-        self.value = value  # is Token, token value is either "true" or "false"
+        if not isinstance(value, bool):
+            self.value = value.get_value() == 'true'  # Token, so check if its value is "true"
+        else:
+            self.value = value
 
     def get_value(self) -> bool:
-        return self.value.get_value() == 'true'
+        return self.value
 
     def __repr__(self) -> str:
         return f'BooleanNode({self.value})'
@@ -189,3 +192,18 @@ class MethodCallNode:
 
     def __repr__(self) -> str:
         return f'MethodCallNode({self.atom !r}, {self.method_name !r}, {self.parameter_values !r})'
+
+
+class IfConditionNode:
+    def __init__(self, conditions: list, body_nodes: list):
+        self.conditions = conditions
+        self.body_nodes = body_nodes
+
+    def get_conditions(self) -> list:
+        return self.conditions
+
+    def get_body_nodes(self) -> list:
+        return self.body_nodes
+
+    def __repr__(self) -> str:
+        return f'IfConditionNode({self.conditions !r}, {self.body_nodes !r})'

@@ -1,13 +1,9 @@
-function bob(a, b) {
-    a = 3 + a * 84;
-    b = b * 3 + 124;
-    return a + b;
+var test = 4;
+
+if (test == 3) {
+    log('test');
+} else if (test == 4) {
+    log('true test');
+} else {
+    log('else');
 }
-
-var value_1 = int(12 * random());
-var value_2 = int(10 * random());
-var test = bob(value_1, value_2);
-
-log("random value:", test);
-log("random string:", test.to_str());
-log("test:", (true || 5) + 3)

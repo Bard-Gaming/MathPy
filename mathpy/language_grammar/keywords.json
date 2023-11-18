@@ -6,5 +6,8 @@
   "true":       "TT_BOOLEAN",
   "false":      "TT_BOOLEAN",
 
+  "if":         "TT_CONDITIONAL",
+  "else":       "TT_CONDITIONAL",
+
   "return":     "TT_RETURN"
 }

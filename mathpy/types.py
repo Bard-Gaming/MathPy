@@ -44,6 +44,9 @@ class MathPyNull(MathPyObject):
     def __str__(self) -> str:
         return "null"
 
+    def __bool__(self) -> bool:
+        return False
+
     def __repr__(self) -> str:
         return "MathPyNull()"
 
@@ -87,6 +90,9 @@ class MathPyBool(MathPyObject):
 
     def __str__(self) -> str:
         return str(self.value).lower()
+
+    def __bool__(self) -> bool:
+        return self.value
 
     def __repr__(self) -> str:
         return f"MathPyBool({self.value})"
@@ -169,6 +175,9 @@ class MathPyNumber(MathPyObject):
     # ------- Miscellaneous ------- :
     def __str__(self) -> str:
         return str(self.value)
+
+    def __bool__(self) -> bool:
+        return bool(self.value)
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}({self.value})'

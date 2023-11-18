@@ -1,4 +1,4 @@
-from .types import MathPyString, MathPyInt, MathPyFloat, MathPyNull
+from .types import MathPyString, MathPyInt, MathPyFloat, MathPyNull, MathPyBool
 from .errors import MathPyTypeError
 from random import random
 
@@ -44,12 +44,20 @@ def builtin_function_random(*args):
     return MathPyFloat(random())
 
 
+def builtin_function_bool(value, *args):
+    if args:
+        raise MathPyTypeError(f'bool() takes 1 argument, {len(args) + 1} given.')
+
+    return MathPyBool(bool(value))
+
+
 builtins_list = (
     builtin_function_log, builtin_function_str,
     builtin_function_int, builtin_function_random,
+    builtin_function_bool
 )
 
 builtin_functions = {
-    fnc.__name__[17:]: function_wrapper(fnc)
+    fnc.__name__[17:]: function_wrapper(fnc)  # [17:] to remove "builtin_function_"
     for fnc in builtins_list
 }

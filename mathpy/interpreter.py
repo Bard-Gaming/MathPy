@@ -194,5 +194,13 @@ class MathPyInterpreter:
 
         return method(*parameter_list)
 
+    def visit_IfConditionNode(self, node, context: MathPyContext):
+        conditions: list = node.get_conditions()
+        body_nodes: list = node.get_body_nodes()
+        for condition, body_node in zip(conditions, body_nodes):
+            if bool(self.visit(condition, context)) is True:  # check if condition is fulfilled
+                self.visit(body_node, context)  # visit CodeBlockNode --> creates own context
+                return
+
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')
