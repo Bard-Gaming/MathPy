@@ -7,12 +7,12 @@
 - [x] Rework Lexer tokenize process
 	- [x] Allow tokens longer than 1 character
 
-- [ ] Boolean Operators
+- [x] Boolean Operators
 
-- [ ] Conditions
-	- [ ] if
-	- [ ] else if/elif --> decide based on implementation complexity
-	- [ ] else (if not already covered by else if)
+- [x] Conditions
+	- [x] if
+	- [x] else if
+	- [x] else
 
 - [ ] Loops
 	- [ ] For loop
@@ -32,5 +32,3 @@
 - [ ] Add technical (IT) information on each formula:
 	- [ ] Complexity (Big-O)
 	- [ ] Implementation
-
-- [ ] Fix demonstration for ind() formula
