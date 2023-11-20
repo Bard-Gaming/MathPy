@@ -2,7 +2,7 @@ from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
                            FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode, BooleanNode,
-                           IfConditionNode)
+                           IfConditionNode, WhileLoopNode)
 
 
 class MathPyParser:
@@ -131,6 +131,9 @@ class MathPyParser:
 
         elif token.tt_type == 'TT_CONDITIONAL':
             return self.if_condition()
+
+        elif token.tt_type == 'TT_WHILE':
+            return self.while_loop()
 
         return self.lesser_statement()
 
@@ -352,3 +355,22 @@ class MathPyParser:
 
         self.auto_insert_newline()  # insert newline for next statement
         return IfConditionNode(condition_list, body_list)
+
+    def while_loop(self) -> WhileLoopNode:
+        if self.current_token.tt_type != 'TT_WHILE':
+            raise MathPySyntaxError('while', self.current_token)
+        self.advance()
+
+        if self.current_token.tt_type != 'TT_LEFT_PARENTHESIS':
+            raise MathPySyntaxError('(', self.current_token)
+        self.advance()
+
+        condition_expression = self.expression()
+
+        if self.current_token.tt_type != 'TT_RIGHT_PARENTHESIS':
+            raise MathPySyntaxError(')', self.current_token)
+        self.advance()
+
+        body_node = self.lesser_statement()
+
+        return WhileLoopNode(condition_expression, body_node)

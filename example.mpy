@@ -1,9 +1,8 @@
-var test = 4;
+var bobby = 5;
 
-if (test == 3) {
-    log('test');
-} else if (test == 4) {
-    log('true test');
-} else {
-    log('else');
+while (bobby < 10) {
+    bobby = bobby + 1;
+    log(bobby);
 }
+
+log("bobby", bobby);

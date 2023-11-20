@@ -9,5 +9,7 @@
   "if":         "TT_CONDITIONAL",
   "else":       "TT_CONDITIONAL",
 
+  "while":      "TT_WHILE",
+
   "return":     "TT_RETURN"
 }

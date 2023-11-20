@@ -207,3 +207,18 @@ class IfConditionNode:
 
     def __repr__(self) -> str:
         return f'IfConditionNode({self.conditions !r}, {self.body_nodes !r})'
+
+
+class WhileLoopNode:
+    def __init__(self, condition, body):
+        self.condition = condition  # Node
+        self.body = body  # Node
+
+    def get_condition(self):
+        return self.condition
+
+    def get_body(self):
+        return self.body
+
+    def __repr__(self) -> str:
+        return f'WhileLoop({self.condition !r}, {self.body !r})'

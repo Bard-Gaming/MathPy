@@ -22,7 +22,7 @@ class MathPySymbolTable:
         if self.get(symbol) is None:
             raise MathPyNameError(f'Name {symbol !r} was not declared in current scope')
 
-        if self.parent is not None and self.table.get(symbol) is None:
+        if self.parent is not None:
             self.parent.set(symbol, new_value)  # symbol defined in a parent, so change in parent
 
         self.table[symbol] = new_value  # symbol defined in self, so change own symbol table
@@ -199,8 +199,21 @@ class MathPyInterpreter:
         body_nodes: list = node.get_body_nodes()
         for condition, body_node in zip(conditions, body_nodes):
             if bool(self.visit(condition, context)) is True:  # check if condition is fulfilled
-                self.visit(body_node, context)  # visit CodeBlockNode --> creates own context
-                return
+                output = self.visit(body_node, context)  # visit CodeBlockNode --> creates own context
+                return output if output.__class__.__name__ == 'ReturnNode' else MathPyNull()
+
+    def visit_WhileLoopNode(self, node, context: MathPyContext):
+        condition = node.get_condition()
+        body = node.get_body()
+
+        # create local context so that changes to
+        # context within code block are saved
+        local_context = MathPyContext(parent=context)
+
+        while bool(self.visit(condition, local_context)) is True:
+            output = self.visit(body, local_context)
+            if output.__class__.__name__ == 'ReturnNode':
+                return output
 
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')
