@@ -1,5 +1,5 @@
 from .errors import MathPyNameError, MathPySyntaxError
-from .types import MathPyNull, MathPyBool, MathPyString, MathPyInt, MathPyFloat, MathPyFunction
+from .types import MathPyNull, MathPyBool, MathPyString, MathPyInt, MathPyFloat, MathPyFunction, MathPyList
 
 
 class MathPySymbolTable:
@@ -216,6 +216,9 @@ class MathPyInterpreter:
             output = self.visit(body, local_context)
             if output.__class__.__name__ == 'ReturnNode':
                 return output
+
+    def visit_ListNode(self, node, context: MathPyContext):
+        return MathPyList(self.visit(value, context) for value in node.get_value())
 
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')

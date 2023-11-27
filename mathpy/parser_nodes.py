@@ -222,3 +222,14 @@ class WhileLoopNode:
 
     def __repr__(self) -> str:
         return f'WhileLoop({self.condition !r}, {self.body !r})'
+
+
+class ListNode:
+    def __init__(self, value: list):
+        self.value = value
+
+    def get_value(self) -> list:
+        return self.value
+
+    def __repr__(self) -> str:
+        return f'ListNode({self.value})'

@@ -2,7 +2,7 @@ from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
                            FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode, BooleanNode,
-                           IfConditionNode, WhileLoopNode)
+                           IfConditionNode, WhileLoopNode, ListNode)
 
 
 class MathPyParser:
@@ -61,6 +61,9 @@ class MathPyParser:
         elif token.tt_type == 'TT_BOOLEAN':
             self.advance()
             return BooleanNode(token)
+
+        elif token.tt_type == 'TT_LEFT_BRACKET':
+            return self.list_construct()
 
         elif token.tt_type == 'TT_LEFT_PARENTHESIS':
             self.advance()  # skip left parenthesis
@@ -374,3 +377,30 @@ class MathPyParser:
         body_node = self.lesser_statement()
 
         return WhileLoopNode(condition_expression, body_node)
+
+    def list_construct(self) -> ListNode:
+        if self.current_token.tt_type != 'TT_LEFT_BRACKET':
+            raise MathPySyntaxError('[', self.current_token)
+        self.advance()
+
+        if self.current_token.tt_type == 'TT_RIGHT_BRACKET':
+            self.advance()
+            return ListNode([])
+
+        values = [self.expression()]
+
+        while self.current_token and self.current_token.tt_type == 'TT_COMMA':
+            self.advance()
+
+            if self.current_token.tt_type == 'TT_RIGHT_BRACKET':
+                self.advance()
+                return ListNode(values)
+
+            values.append(self.expression())
+
+        if self.current_token.tt_type != 'TT_RIGHT_BRACKET':
+            raise MathPySyntaxError(']', self.current_token)
+        self.advance()
+
+        return ListNode(values)
+

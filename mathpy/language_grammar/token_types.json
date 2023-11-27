@@ -15,6 +15,9 @@
   "TT_LEFT_BRACE":        ["{"],
   "TT_RIGHT_BRACE":       ["}"],
 
+  "TT_LEFT_BRACKET":      ["["],
+  "TT_RIGHT_BRACKET":     ["]"],
+
   "TT_QUOTE":             ["\"", "'"],
 
   "TT_COMMENT":           ["#"],
