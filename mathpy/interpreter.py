@@ -22,10 +22,12 @@ class MathPySymbolTable:
         if self.get(symbol) is None:
             raise MathPyNameError(f'Name {symbol !r} was not declared in current scope')
 
-        if self.parent is not None:
+        if self.table.get(symbol) is not None:  # check if it's in self first, before parent
+            self.table[symbol] = new_value  # symbol defined in self, so change own symbol table
+
+        else:  # self.get() is not None, so parent preset if it's not in self
             self.parent.set(symbol, new_value)  # symbol defined in a parent, so change in parent
 
-        self.table[symbol] = new_value  # symbol defined in self, so change own symbol table
 
     def declare(self, symbol: str, value: any) -> None:
         # even if symbol is declared in parent, declare new local variable
