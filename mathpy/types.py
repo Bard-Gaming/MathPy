@@ -12,11 +12,69 @@ class MathPyObject:
         raise MathPyAttributeError(f'{self.__class__.__name__ !r} has no method {method_name !r}')
 
     # --------- Miscellaneous --------- :
+    def class_name(self) -> str:
+        return self.__class__.__name__[6:]  # skip the "MathPy" in the class name
+
     def __int__(self):
         raise MathPyValueError(f"Can't turn {self.__class__.__name__ !r} to integer")
 
     def __repr__(self) -> str:
         return "MathPyObject()"
+
+
+class MathPyIterable(MathPyObject):
+    # --------- Attributes --------- :
+    def attribute_length(self) -> "MathPyInt":
+        return MathPyInt(len(self))
+
+    # --------- Miscellaneous --------- :
+    def __len__(self) -> int:
+        raise NotImplementedError('Can\'t take length of \'MathPyIterableObject\' object (sub-class needed)')
+
+    def __repr__(self) -> str:
+        return 'MathPyIterable()'
+
+
+class MathPyList(MathPyIterable, MathPyObject):
+    def __init__(self, __iter):
+        self.value = list(__iter)
+
+    # --------- Methods --------- :
+    def method_append(self, *args):
+        if len(args) > 1:
+            raise MathPyTypeError(f'list.append() takes 1 argument, {len(args)} given')
+
+        self.value.append(args[0])
+
+    def method_extend(self, *args):
+        if len(args) > 1:
+            raise MathPyTypeError(f'list.extend() takes 1 argument, {len(args)} given')
+        elif not issubclass(args[0], MathPyIterable):
+            raise MathPyValueError(f'list.extend() takes an iterable, got {args[0].class_name()}')
+
+        self.value.extend(args[0])
+
+    def method_reversed(self, *args) -> "MathPyList":
+        if args:
+            raise MathPyTypeError(f'list.reversed() takes 0 arguments, {len(args)} given')
+
+        return MathPyList(reversed(self.value))
+
+    # --------- Miscellaneous --------- :
+    def __getitem__(self, __i: int) -> any:
+        if __i >= len(self.value):
+            raise MathPyIndexError('Index out of bounds')
+
+        return self.value[__i]
+
+    def __len__(self) -> int:
+        return len(self.value)
+
+    def __str__(self) -> str:
+        return f'[{", ".join(str(element) for element in self.value)}]'
+
+    def __repr__(self) -> str:
+        return f'MathPyList({self.value !r})'
 
 
 class MathPyNull(MathPyObject):
@@ -215,7 +273,7 @@ class MathPyFloat(MathPyNumber):
         return int(self.value)
 
 
-class MathPyString(MathPyNumber):
+class MathPyString(MathPyIterable, MathPyNumber):
     # generated from language_grammar/string_base.json
     base_chars = [
         " ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
@@ -264,9 +322,6 @@ class MathPyString(MathPyNumber):
         return self._binary_operation(other, '//')  # division = integer division for Strings
 
     # --------- Attributes --------- :
-    def attribute_length(self) -> MathPyInt:
-        return MathPyInt(len(self))
-
     def attribute_value(self) -> MathPyInt:
         return MathPyInt(self.value)
 
@@ -285,8 +340,8 @@ class MathPyString(MathPyNumber):
 
         return MathPyString(
             sum(((self.value // self.base_number ** i) - (
-                        (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
-                            length - i) for i in range(length + 1))
+                    (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
+                        length - i) for i in range(length + 1))
         )
 
     # ------- Miscellaneous ------- :
