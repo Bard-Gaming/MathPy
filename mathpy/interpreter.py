@@ -220,5 +220,11 @@ class MathPyInterpreter:
     def visit_ListNode(self, node, context: MathPyContext):
         return MathPyList(self.visit(value, context) for value in node.get_value())
 
+    def visit_IterableGetNode(self, node, context: MathPyContext):
+        iterable = self.visit(node.get_node(), context)
+        index = self.visit(node.get_index(), context)
+
+        ...
+
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')

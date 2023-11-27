@@ -2,7 +2,7 @@ from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
                            FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode, BooleanNode,
-                           IfConditionNode, WhileLoopNode, ListNode)
+                           IfConditionNode, WhileLoopNode, ListNode, IterableGetNode)
 
 
 class MathPyParser:
@@ -79,11 +79,14 @@ class MathPyParser:
         token = self.current_token
 
         if token.tt_type == 'TT_LEFT_PARENTHESIS':  # left parenthesis after atom has to be a call
-            return self.call_function(sub_atom)
+            return self.atom(self.call_function(sub_atom))
 
         elif token.tt_type == 'TT_DOT':  # atom followed by . has to be attribute access
             attribute = self.access_attribute(sub_atom)
             return self.atom(attribute)  # pass attribute as atom (allows chained attributes)
+
+        elif token.tt_type == 'TT_LEFT_BRACKET':  # IterableGetNode
+            return self.atom(self.iterable_get(sub_atom))
 
         return sub_atom
 
@@ -403,4 +406,20 @@ class MathPyParser:
         self.advance()
 
         return ListNode(values)
+
+    def iterable_get(self, sub_atom) -> IterableGetNode:
+        if self.current_token.tt_type != 'TT_LEFT_BRACKET':
+            raise MathPySyntaxError('[', self.current_token)
+        self.advance()
+
+        if self.current_token.tt_type == 'TT_RIGHT_BRACKET':
+            raise MathPySyntaxError('expression', self.current_token)
+
+        index = self.expression()
+
+        if self.current_token.tt_type != 'TT_RIGHT_BRACKET':
+            raise MathPySyntaxError(']', self.current_token)
+        self.advance()
+
+        return IterableGetNode(sub_atom, index)
 

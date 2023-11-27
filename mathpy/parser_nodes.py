@@ -233,3 +233,18 @@ class ListNode:
 
     def __repr__(self) -> str:
         return f'ListNode({self.value})'
+
+
+class IterableGetNode:
+    def __init__(self, node, index):
+        self.node = node  # node
+        self.index = index  # also node
+
+    def get_node(self):
+        return self.node
+
+    def get_index(self):
+        return self.index
+
+    def __repr__(self) -> str:
+        return f'IterableGetNode({self.node !r}, {self.index !r})'
