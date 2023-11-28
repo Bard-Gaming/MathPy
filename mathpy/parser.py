@@ -2,7 +2,7 @@ from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
                            FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode, BooleanNode,
-                           IfConditionNode, WhileLoopNode, ListNode, IterableGetNode, UnaryNode)
+                           IfConditionNode, WhileLoopNode, ListNode, IterableGetNode, UnaryNode, ForLoopNode)
 
 
 class MathPyParser:
@@ -147,6 +147,9 @@ class MathPyParser:
 
         elif token.tt_type == 'TT_WHILE':
             return self.while_loop()
+
+        elif token.tt_type == 'TT_FOR':
+            return self.for_loop()
 
         return self.lesser_statement()
 
@@ -429,4 +432,34 @@ class MathPyParser:
         self.advance()
 
         return IterableGetNode(sub_atom, index)
+
+    def for_loop(self) -> ForLoopNode:
+        if self.current_token.tt_type != 'TT_FOR':
+            raise MathPySyntaxError('for', self.current_token)
+        self.advance()  # skip for token
+
+        if self.current_token.tt_type != 'TT_LEFT_PARENTHESIS':
+            raise MathPySyntaxError('(', self.current_token)
+        self.advance()
+
+        if self.current_token.tt_type != 'TT_NAME':
+            raise MathPySyntaxError('name', self.current_token)
+        variable_name = self.current_token
+        self.advance()
+
+        if self.current_token.tt_type != 'TT_IN':
+            raise MathPySyntaxError('in', self.current_token)
+        self.advance()
+
+        iterable = self.atom()
+
+        if self.current_token.tt_type != 'TT_RIGHT_PARENTHESIS':
+            raise MathPySyntaxError('(', self.current_token)
+        self.advance()
+
+        body = self.lesser_statement()
+
+        return ForLoopNode(variable_name, iterable, body)
+
+
 

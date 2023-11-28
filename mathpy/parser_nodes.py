@@ -263,3 +263,23 @@ class UnaryNode:
 
     def __repr__(self) -> str:
         return f'UnaryNode({self.atom !r}, {self.sign_token !r})'
+
+
+class ForLoopNode:
+    def __init__(self, var_name, iterable, body):
+        self.var_name = var_name  # token
+        self.iterable = iterable  # node
+        self.body = body  # node
+
+    def get_var_name(self) -> str:
+        return self.var_name.get_value()
+
+    def get_iterable(self):
+        return self.iterable
+
+    def get_body(self):
+        return self.body
+
+    def __repr__(self) -> str:
+        return f'ForLoopNode({self.var_name !r}, {self.iterable !r}, {self.body !r})'
+

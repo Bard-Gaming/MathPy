@@ -153,7 +153,7 @@ class MathPyInterpreter:
         )  # inherit top level of parent (keep main if code block in main) for return statement
         visit_output = self.visit(node.get_value(), code_block_context)  # node.get_value() is MultipleStatementsNode
 
-        return visit_output
+        return visit_output  # is MathPyNull() if no return, else any other value
 
     @staticmethod
     def visit_FunctionDefineNode(node, context: MathPyContext):
@@ -203,7 +203,7 @@ class MathPyInterpreter:
         for condition, body_node in zip(conditions, body_nodes):
             if bool(self.visit(condition, context)) is True:  # check if condition is fulfilled
                 output = self.visit(body_node, context)  # visit CodeBlockNode --> creates own context
-                return output if output.__class__.__name__ == 'ReturnNode' else MathPyNull()
+                # TODO; Add return check
 
     def visit_WhileLoopNode(self, node, context: MathPyContext):
         condition = node.get_condition()
@@ -211,12 +211,11 @@ class MathPyInterpreter:
 
         # create local context so that changes to
         # context within code block are saved
-        local_context = MathPyContext(parent=context)
+        local_context = MathPyContext(parent=context, display_name="while loop")
 
         while bool(self.visit(condition, local_context)) is True:
             output = self.visit(body, local_context)
-            if output.__class__.__name__ == 'ReturnNode':
-                return output
+            # TODO: Add return check
 
     def visit_ListNode(self, node, context: MathPyContext):
         return MathPyList(self.visit(value, context) for value in node.get_value())
@@ -241,7 +240,19 @@ class MathPyInterpreter:
         if sign_str == '+':
             return number
         elif sign_str == '-':
-            return MathPyInt(-1) * number
+            return MathPyInt(-1) * number  # get opposite of number
+
+    def visit_ForLoopNode(self, node, context: MathPyContext):
+        var_name: str = node.get_var_name()
+        iterable = self.visit(node.get_iterable(), context)
+        body = node.get_body()
+        local_context = MathPyContext(parent=context, display_name="for loop")
+        local_context.declare(var_name, MathPyNull())
+
+        for value in iterable:
+            local_context.set(var_name, value)
+            output = self.visit(body, local_context)
+            # TODO: Add check for return. Checking for MathPyNull() or
 
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')

@@ -21,6 +21,9 @@ class MathPyObject:
     def __getitem__(self, item):
         raise MathPyTypeError(f'{self.class_name() !r} is not subscriptable')
 
+    def __iter__(self):
+        raise MathPyTypeError(f'{self.class_name() !r} is not iterable')
+
     def __repr__(self) -> str:
         return "MathPyObject()"
 
@@ -69,6 +72,9 @@ class MathPyList(MathPyIterable, MathPyObject):
             raise MathPyIndexError('Index out of bounds')
 
         return self.value[__i]
+
+    def __iter__(self):
+        yield from self.value
 
     def __len__(self) -> int:
         return len(self.value)
@@ -383,6 +389,10 @@ class MathPyString(MathPyIterable, MathPyNumber):
             return int(str(self))
         except ValueError:
             raise MathPyValueError(f"Couldn't get 'int' value for {self}")
+
+    def __iter__(self):
+        for i in range(len(self)):
+            yield self[i]  # self[i] is already MathPyString (check __getitem__())
 
     def __str__(self) -> str:
         return self.string_from_value(self.value)
