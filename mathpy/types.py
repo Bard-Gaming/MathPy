@@ -283,7 +283,7 @@ class MathPyString(MathPyIterable, MathPyNumber):
         "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
         "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ä", "ö", "ü", "é", "è", "ê", "à", "ù", "Ä", "Ö", "Ü", "È", "Ê",
         "À", "Ù", "ß", "µ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "[", "]", "{", "}", "?", ".",
-        "!", ":", ";", "_", "&", "#", "`", "°", "@", "§", "'", "\"", "+", "-", "*", "/", "%", "<", ">"
+        "!", ":", ";", "_", "&", "#", "`", "°", "@", "§", "'", "\"", "+", "-", "*", "/", "%", "<", ">",
     ]
 
     base_char_lookup = {char: index for index, char in enumerate(base_chars)}
@@ -328,6 +328,9 @@ class MathPyString(MathPyIterable, MathPyNumber):
     # --------- Attributes --------- :
     def attribute_value(self) -> MathPyInt:
         return MathPyInt(self.value)
+
+    def attribute_base_number(self) -> MathPyInt:
+        return MathPyInt(self.base_number)
 
     # --------- Methods --------- :
     def method_to_int(self, *args) -> MathPyInt:

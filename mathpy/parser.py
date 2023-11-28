@@ -42,6 +42,8 @@ class MathPyParser:
     # ------------------ Language Grammar ------------------ :
     def sub_atom(self):
         token = self.current_token
+        if token is None:
+            raise MathPySyntaxError('Unexpected end. Maybe you forgot a ";"?')
 
         if token.tt_type == 'TT_NAME':
             return self.access_variable()

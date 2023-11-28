@@ -6,3 +6,4 @@ var notes = [10.5, 12.7, 18.2,];
 var coefficients = [2, 1, 4.2];
 
 log(moyenne_totale(notes, coefficients));
+log("bonjour".base_number);
