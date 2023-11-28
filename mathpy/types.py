@@ -294,7 +294,8 @@ class MathPyString(MathPyIterable, MathPyNumber):
             case str():
                 value = self.value_from_string(value)
             case int():
-                pass
+                if value < 0:
+                    raise MathPyValueError('\'String\' can\'t have a negative value')
             case _:
                 raise MathPyTypeError(f'Expected either \'str\' or \'int\', got {type(value).__name__ !r}')
 

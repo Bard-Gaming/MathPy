@@ -230,5 +230,14 @@ class MathPyInterpreter:
         index = int(index)  # get integer value from MathPyInt
         return iterable[index]
 
+    def visit_UnaryNode(self, node, context: MathPyContext):
+        number = self.visit(node.get_atom(), context)
+        sign_str = node.get_sign()
+
+        if sign_str == '+':
+            return number
+        elif sign_str == '-':
+            return MathPyInt(-1) * number
+
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')

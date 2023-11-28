@@ -248,3 +248,18 @@ class IterableGetNode:
 
     def __repr__(self) -> str:
         return f'IterableGetNode({self.node !r}, {self.index !r})'
+
+
+class UnaryNode:
+    def __init__(self, atom, sign_token):
+        self.atom = atom
+        self.sign_token = sign_token
+
+    def get_atom(self):
+        return self.atom
+
+    def get_sign(self) -> str:
+        return self.sign_token.get_value()
+
+    def __repr__(self) -> str:
+        return f'UnaryNode({self.atom !r}, {self.sign_token !r})'

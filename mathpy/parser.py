@@ -2,7 +2,7 @@ from .errors import MathPySyntaxError
 from .parser_nodes import (MultipleStatementsNode, BinaryOperationNode, VariableDefineNode, VariableAssignNode,
                            VariableAccessNode, StringNode, NumberNode, CodeBlockNode, NullTypeNode, FunctionDefineNode,
                            FunctionCallNode, ReturnNode, AttributeAccessNode, MethodCallNode, BooleanNode,
-                           IfConditionNode, WhileLoopNode, ListNode, IterableGetNode)
+                           IfConditionNode, WhileLoopNode, ListNode, IterableGetNode, UnaryNode)
 
 
 class MathPyParser:
@@ -61,6 +61,11 @@ class MathPyParser:
         elif token.tt_type == 'TT_BOOLEAN':
             self.advance()
             return BooleanNode(token)
+
+        elif token.get_value() in ['+', '-']:  # Unary (-1 or +1 for instance)
+            self.advance()
+            number = self.atom()
+            return UnaryNode(number, token)
 
         elif token.tt_type == 'TT_LEFT_BRACKET':
             return self.list_construct()
