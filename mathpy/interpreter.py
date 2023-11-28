@@ -1,5 +1,6 @@
 from .errors import MathPyNameError, MathPySyntaxError, MathPyTypeError
-from .types import MathPyNull, MathPyBool, MathPyString, MathPyInt, MathPyFloat, MathPyFunction, MathPyList
+from .types import (MathPyNull, MathPyBool, MathPyString, MathPyInt, MathPyFloat, MathPyFunction, MathPyList,
+                    MathPyNumber)
 
 
 class MathPySymbolTable:
@@ -233,6 +234,9 @@ class MathPyInterpreter:
     def visit_UnaryNode(self, node, context: MathPyContext):
         number = self.visit(node.get_atom(), context)
         sign_str = node.get_sign()
+
+        if not issubclass(number.__class__, MathPyNumber):
+            raise MathPyTypeError(f'Can\'t have unary operations on non-numbers (got type {number.class_name() !r})')
 
         if sign_str == '+':
             return number
