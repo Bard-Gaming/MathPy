@@ -1,4 +1,4 @@
-from .errors import MathPyNameError, MathPySyntaxError
+from .errors import MathPyNameError, MathPySyntaxError, MathPyTypeError
 from .types import MathPyNull, MathPyBool, MathPyString, MathPyInt, MathPyFloat, MathPyFunction, MathPyList
 
 
@@ -224,7 +224,11 @@ class MathPyInterpreter:
         iterable = self.visit(node.get_node(), context)
         index = self.visit(node.get_index(), context)
 
-        ...
+        if not isinstance(index, MathPyInt):  # Check if index is MathPyInt
+            raise MathPyTypeError(f'Iterable indices must be integers, not {index.class_name() !r}')
+
+        index = int(index)  # get integer value from MathPyInt
+        return iterable[index]
 
     def visit_error(self, node, context: MathPyContext):
         raise Exception(f'Unknown node name {node.__class__.__name__ !r}')

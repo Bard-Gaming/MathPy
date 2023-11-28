@@ -18,6 +18,9 @@ class MathPyObject:
     def __int__(self):
         raise MathPyValueError(f"Can't turn {self.__class__.__name__ !r} to integer")
 
+    def __getitem__(self, item):
+        raise MathPyTypeError(f'{self.class_name() !r} is not subscriptable')
+
     def __repr__(self) -> str:
         return "MathPyObject()"
 
