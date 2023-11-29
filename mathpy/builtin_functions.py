@@ -1,4 +1,5 @@
 from .types import MathPyString, MathPyInt, MathPyFloat, MathPyNull, MathPyBool
+from .interpreter import RuntimeResult
 from .errors import MathPyTypeError
 from random import random
 
@@ -12,7 +13,7 @@ def function_wrapper(fnc):
     def function_call(self, *args):
         function_output = fnc(*args)
 
-        return function_output
+        return RuntimeResult(return_value=function_output)  # wrap in RuntimeResult
 
     return function_call
 
