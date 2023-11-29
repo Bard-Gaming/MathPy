@@ -29,7 +29,6 @@ class MathPySymbolTable:
         else:  # self.get() is not None, so parent preset if it's not in self
             self.parent.set(symbol, new_value)  # symbol defined in a parent, so change in parent
 
-
     def declare(self, symbol: str, value: any) -> None:
         # even if symbol is declared in parent, declare new local variable
         self.table[symbol] = value if value is not None else MathPyNull()

@@ -3,12 +3,16 @@ function moyenne_totale(liste_notes, liste_coefficients) {
     var total_coefficients;
 
     for (i in range(liste_notes.length)) {
-        total_notes = total_notes + (liste_notes[i] * liste_coefficients[i]);
+        total_notes = total_notes + liste_notes[i] * liste_coefficients[i];
         total_coefficients = total_coefficients + liste_coefficients[i];
     }
 
     return total_notes / total_coefficients
 }
 
+
+var notes_bob = [12.7, 14.96, 8.64, 19.3, 15.5, 11.2];
+var coefs_bob = [1, 1, 1, 2, 3, 1];
+
 log(moyenne_totale([10.5, 12.7, 18.2,], [2, 1, 4.2]));
-log("bonjour".base_number);
+log("moyenne totale bob:", moyenne_totale(notes_bob, coefs_bob));
