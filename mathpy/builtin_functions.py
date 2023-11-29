@@ -1,4 +1,4 @@
-from .types import MathPyString, MathPyInt, MathPyFloat, MathPyNull, MathPyBool
+from .types import MathPyString, MathPyInt, MathPyFloat, MathPyNull, MathPyBool, MathPyList
 from .interpreter import RuntimeResult
 from .errors import MathPyTypeError
 from random import random
@@ -38,13 +38,6 @@ def builtin_function_int(value, *args):
     return MathPyInt(int(value))
 
 
-def builtin_function_random(*args):
-    if args:
-        raise MathPyTypeError(f'int() takes no arguments, {len(args)} given.')
-
-    return MathPyFloat(random())
-
-
 def builtin_function_bool(value, *args):
     if args:
         raise MathPyTypeError(f'bool() takes 1 argument, {len(args) + 1} given.')
@@ -52,10 +45,30 @@ def builtin_function_bool(value, *args):
     return MathPyBool(bool(value))
 
 
+def builtin_function_random(*args):
+    if args:
+        raise MathPyTypeError(f'int() takes no arguments, {len(args)} given.')
+
+    return MathPyFloat(random())
+
+
+def builtin_function_range(*args):
+    if len(args) > 3:
+        raise MathPyTypeError(f'range() takes 3 arguments, {len(args)} given.')
+
+    if any(not isinstance(value, MathPyInt) for value in args):
+        raise MathPyTypeError(f'range() only takes integer arguments.')
+
+    range_splice = map(lambda x: int(x), args)
+    int_range = range(*range_splice)
+
+    return MathPyList(map(lambda x: MathPyInt(x), int_range))
+
+
 builtins_list = (
     builtin_function_log, builtin_function_str,
-    builtin_function_int, builtin_function_random,
-    builtin_function_bool
+    builtin_function_int, builtin_function_bool,
+    builtin_function_random, builtin_function_range,
 )
 
 builtin_functions = {

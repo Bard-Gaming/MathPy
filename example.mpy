@@ -1,14 +1,14 @@
 function moyenne_totale(liste_notes, liste_coefficients) {
-    for (value in notes) {
-        log(value);
-        if (value == 12.7) {
-            return -1
-        }
+    var total_notes;
+    var total_coefficients;
+
+    for (i in range(liste_notes.length)) {
+        total_notes = total_notes + (liste_notes[i] * liste_coefficients[i]);
+        total_coefficients = total_coefficients + liste_coefficients[i];
     }
+
+    return total_notes / total_coefficients
 }
 
-var notes = [10.5, 12.7, 18.2,];
-var coefficients = [2, 1, 4.2];
-
-log(moyenne_totale(notes, coefficients));
+log(moyenne_totale([10.5, 12.7, 18.2,], [2, 1, 4.2]));
 log("bonjour".base_number);
