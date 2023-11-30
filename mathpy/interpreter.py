@@ -141,7 +141,7 @@ class MathPyInterpreter:
         return RuntimeResult()
 
     @staticmethod
-    def visit_VariableAccessNode(node, context: MathPyContext) -> RuntimeResult:
+    def visit_VariableAccessNode(node, context: MathPyContext) -> RuntimeResult:  # NOQA
         variable_name: str = node.get_name()
         value = context.get(variable_name)
         return RuntimeResult(value)
