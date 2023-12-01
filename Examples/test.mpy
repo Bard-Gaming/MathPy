@@ -1,0 +1,5 @@
+var interval = range(5);
+
+log(interval);
+log(interval.reversed());
+log(range(4, -1, -1));
