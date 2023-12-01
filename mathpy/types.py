@@ -24,6 +24,9 @@ class MathPyObject:
     def __iter__(self):
         raise MathPyTypeError(f'{self.class_name() !r} is not iterable')
 
+    def mathpy_repr(self) -> str:
+        return str(self)
+
     def __repr__(self) -> str:
         return "MathPyObject()"
 
@@ -81,6 +84,9 @@ class MathPyList(MathPyIterable, MathPyObject):
 
     def __str__(self) -> str:
         return f'[{", ".join(str(element) for element in self.value)}]'
+
+    def mathpy_repr(self) -> str:
+        return f'[{", ".join(element.mathpy_repr() for element in self.value)}]'
 
     def __repr__(self) -> str:
         return f'MathPyList({self.value !r})'
@@ -397,6 +403,9 @@ class MathPyString(MathPyIterable, MathPyNumber):
     def __str__(self) -> str:
         return self.string_from_value(self.value)
 
+    def mathpy_repr(self) -> str:
+        return repr(self.string_from_value(self.value))
+
     def __repr__(self) -> str:
         return f"MathPyString({self.value})"
 
@@ -436,6 +445,9 @@ class MathPyFunction(MathPyObject):
     # --------- Miscellaneous --------- :
     def __str__(self) -> str:
         return f"<function {self.function_name !r}>"
+
+    def mathpy_repr(self) -> str:
+        return str(self)
 
     def __repr__(self) -> str:
         return f'MathPyFunction({self.parameter_names !r}, {self.body !r}, {self.parent_context !r}, {self.function_name !r})'
