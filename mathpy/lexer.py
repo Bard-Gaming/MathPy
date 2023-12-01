@@ -95,7 +95,7 @@ class MathPyLexer:
         return Token(number_string, 'TT_NUMBER', line_start, column_start)
 
     def make_comment(self) -> None:
-        while self.current_char != '\n':
+        while self.current_char is not None and self.current_char != '\n':
             self.advance()
 
     def make_equals(self) -> Token:
@@ -160,7 +160,7 @@ class MathPyLexer:
                 token_list.append(self.make_number())
 
             elif self.current_char in token_types["TT_COMMENT"]:
-                token_list.append(self.make_comment())
+                self.make_comment()  # don't append as this does not create a token
 
             else:
                 current_tt_type = token_type_lookup.get(self.current_char)
