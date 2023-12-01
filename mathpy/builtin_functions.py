@@ -20,7 +20,8 @@ def function_wrapper(fnc):
 
 # ----------- Builtin Function Implementations ----------- :
 def builtin_function_log(*args):
-    print(*args)
+    values = map(lambda x: x.mathpy_repr(), args)
+    print(*values)
     return MathPyNull()
 
 
