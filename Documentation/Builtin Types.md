@@ -17,7 +17,7 @@ In MathPy, strings are computed as positive integers in a base that includes mos
 commonly used characters. This means that all mathematical operations that can be
 applied to integers also work on strings.
 
-___
+
 #### Attributes:
 
 ##### ``.value``:
@@ -162,8 +162,13 @@ log(list.reversed());  # prints [["bob", 2], 2, 1]
 ___
 
 ### Strings
+Due to the very nature of strings, they are classified as being iterables as much
+as they can be represented by numbers. As such, they inherit the common attributes
+and methods from both all number derived types and iterable derived types.
 
+For more info, check out the **[Strings](#strings)** section in [Numbers](#numbers).
 
+___
 ## Miscellaneous
 ___
 
