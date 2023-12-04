@@ -7,10 +7,8 @@ The ``log()`` function prints the argument values into the console.
 Multiple arguments are separated by a space. The function
 doesn't mutate values in any way, and doesn't return anything.
 
-**Parameters:** ``*any``
-
-
-**Return value:** ``None``
+- **Parameters:** ``*any``
+- **Return value:** ``None``
 
 **Example:**
 ```js
@@ -27,9 +25,8 @@ ___
 The ``random()`` function is used to get a random value
 between 0 (inclusive) and 1 (exclusive).
 
-**Parameters:** ``[No parameters]``
-
-**Return value:** ``float`` in the interval of [0; 1[
+- **Parameters:** `` ``
+- **Return value:** ``float`` in the interval of [0; 1[
 
 Example:
 ```js
@@ -48,9 +45,8 @@ its value into a string representation of the value.
 If a type that doesn't have a string representation is used
 as an argument, an error is raised.
 
-**Parameters:** ``any``
-
-**Return value:** ``str``
+- **Parameters:** ``any``
+- **Return value:** ``str``
 
 ```js
 var number = 123.29;
@@ -67,9 +63,8 @@ its value into an integer.
 If a type that doesn't have an integer representation is used
 as an argument, an error is raised.
 
-**Parameters:** ``any``
-
-**Return value:** ``int``
+- **Parameters:** ``any``
+- **Return value:** ``int``
 
 Example:
 ```js
@@ -87,9 +82,8 @@ its value into a boolean representation of the value.
 If a type that doesn't have a boolean representation is used
 as an argument, an error is raised.
 
-**Parameters:** ``any``
-
-**Return value:** ``bool``
+- **Parameters:** ``any``
+- **Return value:** ``bool``
 
 Example:
 ```js
@@ -111,15 +105,11 @@ the "start", and "stop" parameters respectively.
 If 3 arguments are used, they will be considered as the "start", "stop",
 and "step" parameters.
 
-**Parameters:** ``int (stop)`` or
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-``int (start)``, ``int (stop)`` or
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-``int (start)``, ``int (stop)``, ``int (step)``
-
-**Return value:** ``list``
+- **Parameters:**
+  - ``int (stop)`` or
+  - ``int (start)``, ``int (stop)`` or
+  - ``int (start)``, ``int (stop)``, ``int (step)``
+- **Return value:** ``list``
 
 Example:
 ```js
