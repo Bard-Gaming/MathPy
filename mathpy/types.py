@@ -18,6 +18,9 @@ class MathPyObject:
     def __int__(self):
         raise MathPyValueError(f"Can't turn {self.__class__.__name__ !r} to integer")
 
+    def __float__(self):
+        raise MathPyValueError(f"Can't turn {self.__class__.__name__ !r} to floating-point number")
+
     def __getitem__(self, item):
         raise MathPyTypeError(f'{self.class_name() !r} is not subscriptable')
 
@@ -114,6 +117,9 @@ class MathPyNull(MathPyObject):
     def __int__(self) -> int:
         return 0
 
+    def __float__(self) -> float:
+        return 0.0
+
     def __str__(self) -> str:
         return "null"
 
@@ -160,6 +166,9 @@ class MathPyBool(MathPyObject):
 
     def __int__(self) -> int:
         return 1 * self.value  # 1 * False = 0; 1 * True = 1
+
+    def __float__(self) -> float:
+        return 1.0 * self.value
 
     def __str__(self) -> str:
         return str(self.value).lower()
@@ -248,6 +257,12 @@ class MathPyNumber(MathPyObject):
     # ------- Miscellaneous ------- :
     def __str__(self) -> str:
         return str(self.value)
+
+    def __int__(self) -> int:
+        return int(self.value)
+
+    def __float__(self) -> float:
+        return float(self.value)
 
     def __bool__(self) -> bool:
         return bool(self.value)
@@ -390,11 +405,17 @@ class MathPyString(MathPyIterable, MathPyNumber):
 
             raise NotImplementedError('Optimized way still yet to be found')
 
-    def __int__(self):
+    def __int__(self) -> int:
         try:
             return int(str(self))
         except ValueError:
-            raise MathPyValueError(f"Couldn't get 'int' value for {self}")
+            raise MathPyValueError(f"Couldn't get 'int' value for {self.mathpy_repr()}")
+
+    def __float__(self) -> float:
+        try:
+            return float(str(self))
+        except ValueError:
+            raise MathPyValueError(f"Couldn't get 'float' value for {self.mathpy_repr()}")
 
     def __iter__(self):
         for i in range(len(self)):

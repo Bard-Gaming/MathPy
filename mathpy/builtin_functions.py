@@ -39,6 +39,13 @@ def builtin_function_int(value, *args):
     return MathPyInt(int(value))
 
 
+def builtin_function_float(value, *args):
+    if args:
+        raise MathPyTypeError(f'float() takes 1 argument, {len(args) + 1} given.')
+
+    return MathPyFloat(float(value))
+
+
 def builtin_function_bool(value, *args):
     if args:
         raise MathPyTypeError(f'bool() takes 1 argument, {len(args) + 1} given.')
@@ -67,8 +74,8 @@ def builtin_function_range(*args):
 
 
 builtins_list = (
-    builtin_function_log, builtin_function_str,
-    builtin_function_int, builtin_function_bool,
+    builtin_function_log,
+    builtin_function_str, builtin_function_int, builtin_function_bool, builtin_function_float,
     builtin_function_random, builtin_function_range,
 )
 
