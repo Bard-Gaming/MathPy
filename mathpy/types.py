@@ -41,7 +41,7 @@ class MathPyIterable(MathPyObject):
 
     # --------- Methods --------- :
     def method_copy(self, *args):
-        return self.__class__(value for value in self)
+        return self.__class__(iter(self))
 
     # --------- Miscellaneous --------- :
     def __len__(self) -> int:

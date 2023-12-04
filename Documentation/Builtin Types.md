@@ -20,17 +20,34 @@ applied to integers also work on strings.
 ___
 #### Attributes:
 
-``.value``: Returns the positive integer that represents the string.
-Note that this is not the same thing as using the ``int()`` function, as
-the latter tries to convert the characters of a string into a number, whereas
-the ``.value`` attribute simply returns the value that makes the string.
+##### ``.value``:
+The ``.value`` attribute is defined as being the integer value of the string.
+Considering the fact that strings in MathPy are represented by integers of a high
+enough base, this attribute allows you to access that value.
 
-``.base_number``: Returns an integer of the base used for the string. The value of the
-base number is static across a single version, but can change with a newer version of
-MathPy (last updated base number: ``107``).
+- **Value:** ``int``
 
-``.length``: Returns an integer representing the length
-(i.e. the quantity of characters) the string contains.
+Example:
+```js
+var text = "Well hello there!";
+
+log(text);  # prints 'Well hello there!'
+log(text.value);  # prints 14479709841755490706022674961864534 (as of MathPy 1.0; subject to change)
+```
+
+##### ``.base_number``: 
+The ``.base_number`` attribute is defined as being the base of the string's
+aforementioned integer value. It is the same across a single version, but may vary
+if more characters are added in future versions.
+
+- **Value:** ``int``
+
+Example:
+```js
+var text = "test";
+
+log(text.base_number);  # prints 107 (as of MathPy 1.0; subject to change)
+```
 
 #### Methods:
 
@@ -85,7 +102,8 @@ log(list_1, list_2, list_3);  # prints [1, 2, 3] [1, 2, 4] [1, 2, 4]
 ```
 ___
 ### Lists
-Lists are mutable index-based objects that can contain any value, including other lists.
+Lists are mutable index-based objects that can contain an assortment
+of values, including other lists.
 
 #### Attributes:
 
