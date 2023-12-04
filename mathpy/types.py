@@ -39,9 +39,16 @@ class MathPyIterable(MathPyObject):
     def attribute_length(self) -> "MathPyInt":
         return MathPyInt(len(self))
 
+    # --------- Methods --------- :
+    def method_copy(self, *args):
+        return self.__class__(value for value in self)
+
     # --------- Miscellaneous --------- :
     def __len__(self) -> int:
         raise NotImplementedError('Can\'t take length of \'MathPyIterableObject\' object (sub-class needed)')
+
+    def __iter__(self):
+        raise NotImplementedError('Can\'t iterate through MathPyIterable object (sub-class needed)')
 
     def __repr__(self) -> str:
         return 'MathPyIterable()'
@@ -61,7 +68,7 @@ class MathPyList(MathPyIterable, MathPyObject):
     def method_extend(self, *args):
         if len(args) > 1:
             raise MathPyTypeError(f'list.extend() takes 1 argument, {len(args)} given')
-        elif not issubclass(args[0], MathPyIterable):
+        elif not issubclass(args[0].__class__, MathPyIterable):
             raise MathPyValueError(f'list.extend() takes an iterable, got {args[0].class_name()}')
 
         self.value.extend(args[0])
@@ -377,6 +384,12 @@ class MathPyString(MathPyIterable, MathPyNumber):
                     (self.value // self.base_number ** (i + 1)) * self.base_number)) * self.base_number ** (
                         length - i) for i in range(length + 1))
         )
+
+    def method_copy(self, *args) -> "MathPyString":
+        if args:
+            raise MathPyTypeError(f'str.copy() takes 0 arguments, {len(args)} given')
+
+        return MathPyString(self.value)
 
     # ------- Miscellaneous ------- :
     def __len__(self) -> int:
