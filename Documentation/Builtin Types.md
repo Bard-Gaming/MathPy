@@ -4,12 +4,69 @@
 ## Numbers
 #### Common Attributes:
 
+##### ``.numerator``:
+The ``.numerator`` attribute is defined as being the numerator
+of a ratio equal to the given number, such that the numerator
+and the denominator of the ratio are the smallest
+combination of integers possible.
+
+- **Value:** ``int``
+
+Example:
+```js
+var test_number = 0.25;
+
+log(test_number);  # prints 0.25 (float)
+log(test_number.numerator);  # prints 1 (int), since 1/4 = 0.25
+```
+
+##### ``.denominator``:
+The ``.denominator`` attribute is defined as being the
+denominator of a ration equal to the given number, such that
+the numerator and the denominator of the ratio are the small
+combination of integers possible. Note: due to the nature of
+integers and strings, their denominators are always equal to 1.
+
+- **Value:** ``int``
+
+Example:
+```js
+var test_number = 0.25;
+
+log(test_number);  # prints 0.25 (float)
+log(test_number.denominator);  # prints 4 (int), since 1/4 = 0.25
+```
+
 #### Common Methods:
+
+##### ``.as_integer_ratio()``:
+The ``.as_integer_ratio()`` method returns a list containing
+the numerator (index 0) and denominator (index 1) as integers.
+The numerator and denominator values are the same as the
+number's [numerator](#numerator) and [denominator](#denominator)
+values.
+
+- **Parameters:** `` ``
+- **Return value:** ``list[int, int]``
+
+Example:
+```js
+var test_number = 0.25;
+
+log(test_number);  # prints 0.25 (float)
+log(test_number.as_integer_ratio());  # prints [1, 4] (list)
+```
 
 ___
 ### Integers
-Integers are represented by any number that isn't represented by a "." symbol.
+Integers are whole numbers that aren't represented by a point
+("."). They have the lowest priority when it comes to operations
+between numbers, meaning that any operation involving an integer
+and any other number type.
 
+#### Attributes:
+
+#### Methods:
 
 ___
 ### Strings
@@ -29,10 +86,10 @@ enough base, this attribute allows you to access that value.
 
 Example:
 ```js
-var text = "Well hello there!";
+var text = "hi";
 
-log(text);  # prints 'Well hello there!'
-log(text.value);  # prints 14479709841755490706022674961864534 (as of MathPy 1.0; subject to change)
+log(text);  # prints 'hi'
+log(text.value);  # prints 865 (as of MathPy 1.0; subject to change)
 ```
 
 ##### ``.base_number``: 
@@ -51,15 +108,94 @@ log(text.base_number);  # prints 107 (as of MathPy 1.0; subject to change)
 
 #### Methods:
 
-``.to_int()``: Returns the integer value that makes the string. Functions the same as
-the ``.value`` attribute.
+##### ``.to_int()``:
+The ``.to_int()`` method returns the same value as the
+[``.value``](#value) attribute and exists purely for ease of use.
 
-``.reversed()``: Returns a new string that has its characters reversed from the original.
-For instance, the string "hello" would turn into "olleh".
+- **Parameters:** `` ``
+- **Return value:** ``int``
+
+Example:
+```js
+var text = "hi";
+
+log(text);  # prints 'hi'
+log(text.value);  # prints 865 (as of MathPy 1.0; subject to change)
+```
+
+##### ``.reversed()``:
+The ``.reversed()`` method takes no arguments and returns a new
+string, equivalent to the original string but with its characters
+inverted.
+
+- **Parameters:** `` ``
+- **Return value:** ``str``
+
+Example:
+```js
+var text = "hello";
+
+log(text);  # prints 'hello'
+log(text.reversed());  # prints 'olleh'
+```
 
 ___
 ### Floating-point Numbers (Floats)
+Floating-point numbers (floats for short) can be used to
+represent any real number. They are represented by an
+integer part, separated by a point (or dot, "."), followed by
+a fractional part (can be 0).
 
+#### Attributes:
+
+##### ``.integer_part``:
+The integer part of a float is the integer you get when you leave
+out anything after the decimal point. It is equal to taking the
+floor of a positive float, and the ceiling of a negative float.
+
+- **Value:** ``int``
+
+Example:
+```js
+var test_number = -52.68;
+
+log(test_number);  # prints -52.68 (float)
+log(test_number.integer_part);  # prints -52 (int)
+```
+
+##### ``.fractional_part``:
+The fractional part of a float is a floating point number
+in the range of ]-1; 1[ that you get by subtracting the given
+float by its integer part.
+
+- **Value:** ``float``
+
+Example:
+```js
+var test_number = -52.68;
+
+log(test_number);  # prints -52.68 (float)
+log(test_number.fractional_part);  # prints -0.68 (float)
+```
+
+#### Methods:
+
+##### ``.round()``:
+The ``.round()`` method rounds a number to its nearest integer.
+The amount of rounding can be set with its argument.
+
+- **Parameters:** ``int | str`` (needs to be greater than or equal to 0)
+- **Return value:** ``int | float`` (int if argument is 0)
+
+Example:
+```js
+var test_number = 52.687;
+
+log(test_number);  # prints 52.687
+log(test_number.round(0));  # prints 53 (int)
+log(test_number.round(1));  # prints 52.7 (float)
+```
+ 
 ___
 ## Iterables
 
