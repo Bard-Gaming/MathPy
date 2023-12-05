@@ -261,6 +261,20 @@ class MathPyNumber(MathPyObject):
     def __and__(self, other) -> MathPyBool:
         return MathPyBool(bool(self.value and other.value))
 
+    # --------- Attributes --------- :
+    def attribute_numerator(self):
+        return MathPyInt(self.value.numerator)
+
+    def attribute_denominator(self):
+        return MathPyInt(self.value.denominator)
+
+    # --------- Methods --------- :
+    def method_as_integer_ratio(self, *args):
+        if args:
+            raise MathPyTypeError(f"{self.class_name()}.as_integer_ratio() takes 0 arguments, {len(args)} given.")
+
+        return MathPyList(MathPyInt(number) for number in self.value.as_integer_ratio())
+
     # ------- Miscellaneous ------- :
     def __str__(self) -> str:
         return str(self.value)
@@ -306,6 +320,27 @@ class MathPyFloat(MathPyNumber):
         super().__init__(value)
         self.accepted_operations = (MathPyFloat, MathPyInt, MathPyBool)
 
+    # --------- Attributes --------- :
+    def attribute_integer_part(self):
+        return MathPyInt(int(self.value))
+
+    def attribute_fractional_part(self):
+        return MathPyFloat(self.value - int(self.value))
+
+    # --------- Methods --------- :
+    def method_round(self, round_points, *args):
+        if args:
+            raise MathPyTypeError(f"Float.round() takes 1 argument, {len(args) + 1} given.")
+        if not isinstance(round_points, (MathPyInt, MathPyString)):
+            raise MathPyTypeError(f'Round argument must be a positive integer, got {round_points.mathpy_repr()}')
+        if int(round_points) < 0:
+            raise MathPyTypeError(f'Round argument must be a positive integer, got {round_points.mathpy_repr()}')
+
+        round_value = round(self.value, int(round_points))
+
+        return MathPyFloat(round_value) if int(round_points) > 0 else MathPyInt(int(round_value))
+
+    # --------- Miscellaneous --------- :
     def __int__(self) -> int:
         return int(self.value)
 
