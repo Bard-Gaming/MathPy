@@ -66,8 +66,76 @@ and any other number type.
 
 #### Attributes:
 
+##### ``.nearest_pair``:
+The ``.nearest_pair`` attribute is the closest greater or equal
+pair integer of any given current number. This means that the
+closest pair of a pair number is itself.
+
+- **Value:** ``int``
+
+Example:
+```js
+var number_1 = 5;
+var number_2 = 8;
+
+log(number_1.nearest_pair);  # prints 6, since 5 is uneven
+log(number_2.nearest_pair);  # prints 8, since 8 is even
+```
+
+##### ``.sign``:
+The ``.sign`` attribute is the value of the given number's sign,
+such that multiplying the absolute value of the given number
+with its sign yields the given number.
+
+- **Value:** ``int | null`` (``-1`` or ``1`` if the number is not zero)
+
+Example:
+```js
+var number_1 = 412;
+var number_2 = -17;
+
+log(number_1.sign);  # prints 1
+log(number_2.sign);  # prints -1
+log(number_1 * number_2.sign);  # prints -412 since 412 * -1 = -412
+```
+
 #### Methods:
 
+##### ``.to_str()``:
+The ``.to_str()`` method allows you to take the value of the
+given number and turn it into a string. This is not the same
+as the ``str()`` builtin function, as it doesn't turn the
+numbers that compose the integer into an integer, but instead
+takes the value of the integer and converts it into a string
+this way. It is also the reciprocal method of the string's 
+[``.to_str()``](#tostr) method.
+
+- **Parameters:** `` ``
+- **Return value:** ``str`` (Note: strings can't be formed with negative numbers)
+
+Example:
+```js
+var test_number = 1054900710;
+
+log(test_number.to_str());  # prints 'hello'
+```
+
+##### ``.is_prime()``:
+The ``.is_prime()`` method checks whether the given
+number is a prime number or not and returns a corresponding
+boolean.
+
+- **Parameters:** `` ``
+- **Return value:** ``bool``
+
+Example:
+```
+var not_prime_number = 8;
+var prime_number = 11;
+
+log(not_prime_number.is_prime());  # prints false
+log(prime_number.is_prime());  # prints true
+```
 ___
 ### Strings
 In MathPy, strings are computed as positive integers in a base that includes most
