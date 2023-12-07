@@ -1,5 +1,16 @@
-var not_prime_number = 8;
-var prime_number = 11;
+function main() {
+    log("Hello world!");
+}
 
-log(not_prime_number.is_prime());  # prints false
-log(prime_number.is_prime());  # prints true
+log(main());  # prints "Hello world!" from call, then null
+# since we are printing the output.
+
+function certain_value(val) {
+    var result = [];
+    for (i in range(val - 5, val + 5)) {
+        result.append(i);
+    }
+    return result
+}
+
+log(certain_value(3));

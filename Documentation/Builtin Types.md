@@ -374,15 +374,44 @@ For more info, check out the **[Strings](#strings)** section in [Numbers](#numbe
 
 ___
 ## Miscellaneous
-___
 
 ### Booleans
-
+Booleans are a a type of values that are either expressed as 
+truthy, denoted ``true``, or falsey, denoted ``false``. They
+can be represented as integers using the ``int()`` function
+and can be used in binary operations as well as logic operations/
 ___
 ### Null
+Null is the general type for values that don't have values.
+A function that doesn't return anything will yield ``null``
+when called. It can be turned into a number, or boolean, but
+will always yield a value equivalent to zero or false.
 
 ___
 ### Functions
+Functions are used to automate algorithms and mathematical
+operations. The always have a name, which can be accessed by
+the ``.name`` attribute. When called, functions return ``null``
+unless they contain a return statement with an associated value.
 
+Example:
+```js
+function main() {
+    log("Hello world!");
+}
+
+log(main());  # prints "Hello world!" from call, then null
+# since we are printing the output.
+
+function certain_value(val) {
+    var result = [];
+    for (i in range(val - 5, val + 5)) {
+        result.append(i);
+    }
+    return result
+}
+
+log(certain_value(3));
+```
 ___
 
