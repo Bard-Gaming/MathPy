@@ -1,5 +1,5 @@
 from .errors import MathPyIndexError, MathPyTypeError, MathPyValueError, MathPyAttributeError, MathPyZeroDivisionError
-from math import log
+from math import log, isqrt
 
 
 class MathPyObject:
@@ -300,12 +300,35 @@ class MathPyInt(MathPyNumber):
         super().__init__(value)  # cast to 'int' in case it's a float
         self.accepted_operations = (MathPyInt, MathPyFloat, MathPyString, MathPyBool)
 
+    # --------- Attributes --------- :
+    def attribute_sign(self) -> "MathPyInt" or "MathPyNull":
+        if self.value != 0:
+            return MathPyInt(abs(self.value)//self.value)
+        return MathPyNull()
+
+    def attribute_nearest_pair(self) -> "MathPyInt":
+        return self if self.value % 2 == 0 else MathPyInt(self.value + 1)
+
     # --------- Methods --------- :
     def method_to_str(self, *args) -> "MathPyString":
         if args:
             raise MathPyTypeError(f'int.to_str() takes 0 arguments, {len(args)} given')
 
         return MathPyString(self.value)
+
+    def method_is_prime(self, *args) -> MathPyBool:
+        if args:
+            raise MathPyTypeError(f'{self.class_name()}.is_prime() takes 0 arguments, {len(args)} given')
+
+        if self.value <= 3:
+            return MathPyBool(self.value > 1)
+        if self.value % 2 == 0 or self.value % 3 == 0:
+            return MathPyBool(False)
+        limit = isqrt(self.value)
+        for i in range(5, limit + 1, 6):
+            if self.value % i == 0 or self.value % (i + 2) == 0:
+                return MathPyBool(False)
+        return MathPyBool(True)
 
     # --------- Miscellaneous --------- :
     def __int__(self) -> int:

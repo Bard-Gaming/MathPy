@@ -1,0 +1,13 @@
+function get_primes(n) {
+    var result = [];
+
+    for (i in range(n + 1)) {
+        if (i.is_prime()) {
+            result.append(i);
+        }
+    }
+
+    return result
+}
+
+log(get_primes(100));

@@ -1,5 +1,5 @@
-var interval = range(5);
+var not_prime_number = 8;
+var prime_number = 11;
 
-log(interval);
-log(interval.reversed());
-log(range(4, -1, -1));
+log(not_prime_number.is_prime());  # prints false
+log(prime_number.is_prime());  # prints true
