@@ -17,7 +17,7 @@ have a numerical value of 47802.
 
 ## Install MathPy
 ```commandline
-pip install mathpy
+pip install mathpy-string
 ```
 
 ## Run files in MathPy
