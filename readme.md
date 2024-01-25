@@ -38,17 +38,17 @@ If you wish to run your MathPy files through the command line,
 you can do it as follows:
 
 ```commandline
-python -m mathpy run [filepath]
+python -m mathpy-string run [filepath]
 ```
 
 or, if you wish to access the shell:
 
 ```commandline
-python -m mathpy shell
+python -m mathpy-string shell
 ```
 
 or simply:
 
 ```commandline
-python -m mathpy
+python -m mathpy-string
 ```
