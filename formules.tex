@@ -422,4 +422,108 @@ c + \varepsilon_{1} \times b^{n+1} = E \left( \frac{x}{b^{n}} \right)
 \Rightarrow c = E \left( \frac{x}{b^{n}} \right) - E \left( \frac{x}{b^{n+1}} \right) \times b^{n+1}
 \]
 
+\newpage
+
+\section*{Concaténation de chaînes}
+Soient deux entiers naturels $u$ et $v$ représentés en une même base $b$. \\
+On note $u \mid\mid v$ la concaténation de a et b, tel que le résultat soit égal
+à un nombre composé de tous les chiffres de $u$, puis tous les chiffres de $v$. \\
+
+\noindent \textbf{Définition}:
+
+On pose:
+
+$\left( u; v \right) \in \mathbb{N}$
+
+$b \in \mathbb{N} \backslash \{0; 1\}$ la base dans laquelle $u$ et $v$ sont représentés. \\
+
+On définit l'opération de concaténation de deux nombres:
+
+$u \mid\mid v = u \times b^{len \left( v \right)} + v$ \\
+
+\noindent \textbf{Exemple}:
+
+On pose $\left( u; v \right) \in \mathbb{N}$, tel que:
+
+$u = 125$
+
+$v = 784$ \\
+
+On a:
+
+$u$ et $v$ sont représentés en décimal/base 10 (uniformité de base)
+
+\begin{align*}
+	u \mid\mid v
+	
+	&= u \times b^{len \left( v \right)} + v
+	
+	&= 125 \times 10^{len \left( 784 \right)} + 784
+	
+	&= 125 \times 10^{3} + 784
+	
+	&= 125000 + 784
+	
+	&= 125784
+\end{align*} \\
+
+\noindent \textbf{Propriétés}:
+
+\noindent $\bullet$ Non-commutativité:
+
+$\forall \left( u; v \right) \in \mathbb{N}^{2}$, on a:
+
+$u \mid\mid v \neq v \mid\mid u$ \\
+
+Exemple:
+
+\hspace{\parindent} $53 \mid\mid 21 = 5321$
+
+\hspace{\parindent} $21 \mid\mid 53 = 2153$
+
+\hspace{\parindent} $\Rightarrow 53 \mid\mid 21 \neq 21 \mid\mid 53$
+
+
+\newpage
+
+\noindent $\bullet$ Associativité:
+
+$\forall \left( u; v; l \right) \in \mathbb{N}^{3}_{*}$, on a:
+
+$\left( u \mid\mid v \right) \mid\mid l = u \mid\mid \left( v \mid\mid l \right)$ \\
+
+Exemple:
+
+\hspace{\parindent} $\left( 53 \mid\mid 21 \right) \mid\mid 93$
+
+\hspace{\parindent} $= 5321 \mid\mid 93$
+
+\hspace{\parindent} $= 532193$ \\
+
+\hspace{\parindent} $53 \mid\mid \left( 21 \mid\mid 93 \right)$
+
+\hspace{\parindent} $= 53 \mid\mid 2193$
+
+\hspace{\parindent} $= 532193$ \\
+
+Cependant, pour si on inclut 0, la concaténation n'est pas forcément commutative. \\
+
+Exemple:
+
+\hspace{\parindent} $\left( 50 \mid\mid 0 \right) \mid\mid 67$
+
+\hspace{\parindent} $= 500 \mid\mid 67$
+
+\hspace{\parindent} $= 50067$ \\
+
+\hspace{\parindent} $50 \mid\mid \left( 0 \mid\mid 67 \right)$
+
+\hspace{\parindent} $= 50 \mid\mid 67$
+
+\hspace{\parindent} $= 5067$ \\
+
+L'erreure provient du fait que $0 \times b^{a} = 0$ et $0 + v = v$, mais dans le cadre
+d'une implémentation en informatique, ceci ne pose pas de problème lorsqu'on choisit
+un espace (" ") comme représentation de 0 (ainsi, "bonjour" équivaut à "    bonjour").
+
 \end{document}
